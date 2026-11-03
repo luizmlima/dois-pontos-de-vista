@@ -80,23 +80,9 @@ public/imagens/           # Fotos, identidade visual e imagens locais
 3. Quando o outro também publica uma opinião, o site identifica ambas e classifica a obra automaticamente como **Leitura a Dois**.
 4. Cada avaliação e texto mantém sua autoria e sua data, sem cálculo de nota média.
 
-## Fluxo editorial planejado
-
-Heloísa e Luiz escrevem livremente; os textos também podem ser preparados no Google Docs. Luiz organiza os cadastros e as publicações no painel editorial. A intenção é permitir **criar, revisar e editar** livros e opiniões sem alterar o código a cada nova leitura.
-
-## Próximos passos
-
-- [x] Estrutura visual responsiva e identidade do site.
-- [x] Páginas de livros, opiniões, estante, perfis e Sobre Nós.
-- [x] Coleções Markdown e associação entre livros e opiniões.
-- [x] Configuração inicial do Pages CMS.
-- [ ] Conectar e testar o Pages CMS com o repositório GitHub.
-- [ ] Substituir os conteúdos demonstrativos por publicações reais.
-- [ ] Publicar o site e validar o acesso em dispositivos diferentes.
-
 ## Autores
 
-**Luiz Anselmo** e **Heloísa Marques** — dois leitores, duas formas de enxergar as histórias.
+**Luiz Anselmo** e **Heloísa Marques** 
 
 ---
 
