@@ -1,15 +1,14 @@
 ---
-livro: "o-hobbit"
-pessoa: "ela"
-titulo: "Minha experiência com esta leitura"
+livro: o-hobbit
+pessoa: ela
+titulo: Minha experiência com esta leitura
 nota: 4.5
-dataLeitura: "2026-08-02"
-dataPublicacao: "2026-08-02"
-resumo: "Exemplo de opinião. Substitua pelo resumo do texto real."
-publicado: true
-demonstrativo: true
+dataLeitura: 2026-08-02
+dataPublicacao: 2026-08-02
+resumo: Exemplo de opinião. Substitua pelo resumo do texto real.
+publicado: false
+demonstrativo: false
 ---
-
 Este é um **texto de demonstração**. Quando você publicar sua opinião verdadeira, substitua este conteúdo e os dados acima.
 
 ## Primeiras impressões
