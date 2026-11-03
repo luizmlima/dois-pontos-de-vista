@@ -6,7 +6,7 @@ ano: 1866
 sinopse: "Sinopse de demonstração. Edite aqui para apresentar o livro sem spoilers."
 cor: "#564843"
 iniciais: "C & C"
-capa: "https://covers.openlibrary.org/b/olid/OL51724713M-L.jpg?default=false"
+capa: "https://covers.openlibrary.org/b/olid/OL51724713M-L.jpg"
 publicado: true
 demonstrativo: true
 ---

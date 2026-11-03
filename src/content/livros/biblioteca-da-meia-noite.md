@@ -6,7 +6,7 @@ ano: 2020
 sinopse: "Sinopse de demonstração. Edite aqui para apresentar o livro sem spoilers."
 cor: "#41596A"
 iniciais: "BM"
-capa: "https://covers.openlibrary.org/b/olid/OL40213472M-L.jpg?default=false"
+capa: "https://covers.openlibrary.org/b/olid/OL40213472M-L.jpg"
 publicado: true
 demonstrativo: true
 ---
