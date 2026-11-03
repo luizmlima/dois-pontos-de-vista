@@ -1,0 +1,20 @@
+<footer class="rodape-site">
+  <div class="container-site rodape-conteudo-site">
+    <a href="/" class="marca-rodape" aria-label="Dois Pontos de Vista — início">
+      <img src="/imagens/logo-dois-pontos-de-vista.png" width="92" height="53" alt="" loading="lazy" />
+      <span>dois pontos <small>de vista</small></span>
+    </a>
+    <small class="assinatura-rodape">Leituras · Opiniões · Perspectivas</small>
+  </div>
+</footer>
+<style>
+  .rodape-site{background:#312E2B;color:#F5F0E8;padding:27px 0}
+  .container-site{width:min(1120px,calc(100% - 48px));margin-inline:auto}
+  .rodape-conteudo-site{display:flex;align-items:center;justify-content:space-between;gap:20px}
+  .marca-rodape{display:inline-flex;align-items:center;gap:10px;color:#F5F0E8;text-decoration:none;font:600 20px/1.05 'Playfair Display',Georgia,serif}
+  .marca-rodape img{width:53px;height:34px;object-fit:contain;flex:none}
+  .marca-rodape small{display:block;font-size:16px;line-height:1.1}
+  .assinatura-rodape{font:400 11px 'DM Sans',sans-serif;letter-spacing:1px;color:#CBBFB3}
+  .marca-rodape:focus-visible{outline:2px solid #C4A47D;outline-offset:5px}
+  @media(max-width:700px){.container-site{width:calc(100% - 36px)}.rodape-conteudo-site{flex-direction:column;text-align:center;gap:14px}.marca-rodape{font-size:19px}.marca-rodape img{width:47px;height:30px}.marca-rodape small{font-size:15px}}
+</style>

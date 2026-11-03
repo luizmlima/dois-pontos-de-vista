@@ -1,0 +1,73 @@
+---
+import '../styles/mobile-polish.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Encerramento from '../components/Encerramento.astro';
+const foto = '/imagens/luiz-heloisa-sobre.jpg';
+---
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/png" href="/favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Conheça Luiz Anselmo e Heloísa Marques e descubra como funciona o Dois Pontos de Vista, um espaço dedicado às leituras e opiniões de dois leitores." />
+  <title>Sobre nós — Dois Pontos de Vista</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet" />
+</head>
+<body>
+<Header />
+<main id="conteudo-principal">
+  <section class="apresentacao container">
+    <div class="texto-hero">
+      <p class="rotulo">AS PESSOAS POR TRÁS DAS PÁGINAS</p>
+      <h1>Dois leitores.<br/><em>Muitas histórias.</em></h1>
+      <p class="introducao">Somos Luiz Anselmo e Heloísa Marques. Criamos o <strong>Dois Pontos de Vista</strong> para reunir nossas leituras, guardar impressões e compartilhar o que cada livro desperta em nós.</p>
+      <p class="introducao">Nem sempre escolhemos as mesmas obras, e está tudo bem. Aqui, cada um tem liberdade para seguir a própria estante.</p>
+      <a href="#como-funciona" class="link-texto">Entenda o projeto <span aria-hidden="true">↘</span></a>
+    </div>
+    <figure class="foto-principal">
+      <img src={foto} width="960" height="1280" alt="Luiz Anselmo e Heloísa Marques juntos, sorrindo para uma fotografia" loading="eager" fetchpriority="high" />
+      <figcaption>Luiz &amp; Heloísa <span aria-hidden="true">·</span> Dois pontos de vista</figcaption>
+    </figure>
+  </section>
+
+  <section class="manifesto">
+    <div class="container manifesto-grid">
+      <span class="aspas" aria-hidden="true">“</span>
+      <div><p class="rotulo">POR QUE ESTE ESPAÇO EXISTE?</p><h2>Uma forma de guardar o que as histórias <em>deixam em nós.</em></h2><p>Este site é nosso arquivo de leituras e reflexões. Não buscamos chegar sempre à mesma conclusão: o interessante é perceber como cada pessoa encontra algo diferente nas mesmas páginas — ou descobre livros que o outro ainda não conhece.</p></div>
+    </div>
+  </section>
+
+  <section class="funcionamento container" id="como-funciona">
+    <div class="secao-intro"><p class="rotulo">COMO FUNCIONA</p><h2>Cada leitura tem <em>seu lugar.</em></h2><p>Os livros são o ponto de partida. As opiniões pertencem a quem as escreveu.</p></div>
+    <div class="etapas">
+      <article><span class="numero">01</span><div class="duas-bolinhas"><i></i></div><h3>Leituras individuais</h3><p>Cada um escolhe seus próprios livros, publica seu texto e registra sua avaliação. Nem toda leitura precisa ser compartilhada.</p></article>
+      <article><span class="numero">02</span><div class="duas-bolinhas"><i></i><i></i></div><h3>Leituras a dois</h3><p>Quando os dois escrevem sobre o mesmo livro — mesmo que em anos diferentes — ele passa a reunir duas perspectivas.</p></article>
+      <article><span class="numero">03</span><div class="icone-livro" aria-hidden="true">↗</div><h3>Opiniões independentes</h3><p>A página do livro apresenta a sinopse e nossas notas. Cada opinião tem um espaço próprio para que você possa ler o texto inteiro.</p></article>
+    </div>
+  </section>
+
+  <section class="perfis-secao">
+    <div class="container">
+      <div class="secao-intro"><p class="rotulo">QUEM ESCREVE</p><h2>Conheça nossos <em>olhares.</em></h2><p>Dois perfis, biografias próprias e uma estante para cada leitor.</p></div>
+      <div class="perfis">
+        <a class="perfil" href="/autores/luiz-anselmo" style="--cor:#53675A"><img src="/imagens/luiz-anselmo.jpg" alt="Retrato de Luiz Anselmo" loading="lazy"/><div><span>O OLHAR DELE</span><h3>Luiz Anselmo</h3><p>Conheça minhas leituras e avaliações.</p><strong>Explorar perfil ↗</strong></div></a>
+        <a class="perfil" href="/autores/heloisa-marques" style="--cor:#884C55"><img src="/imagens/heloisa-marques.jpg" alt="Retrato de Heloísa Marques" loading="lazy"/><div><span>O OLHAR DELA</span><h3>Heloísa Marques</h3><p>Conheça minhas leituras e avaliações.</p><strong>Explorar perfil ↗</strong></div></a>
+      </div>
+    </div>
+  </section>
+
+  <Encerramento titulo="Talvez nosso próximo livro também seja o seu." descricao="Continue a história explorando as leituras e opiniões de Luiz e Heloísa." principal={{ texto: 'Visitar nossa estante', href: '/estante' }} secundaria={{ texto: 'Ver leituras a dois', href: '/leituras-a-dois' }} />
+</main>
+<Footer />
+</body>
+</html>
+<style>
+:global(*){box-sizing:border-box} :global(html){scroll-behavior:smooth} :global(body){margin:0;background:#F5F0E8;color:#312E2B;font-family:'DM Sans',sans-serif;-webkit-font-smoothing:antialiased} :global(a){color:inherit;text-decoration:none} .container{width:min(1120px,calc(100% - 48px));margin-inline:auto} h1,h2,h3,p{margin-top:0} h1,h2,h3{font-family:'Playfair Display',Georgia,serif;font-weight:500} .cabecalho{border-bottom:1px solid #ddd2c1} .topo{min-height:98px;display:flex;align-items:center;justify-content:space-between;gap:25px} .marca{display:flex;align-items:center;gap:10px;font-family:'Playfair Display',serif;font-size:26px;line-height:1.03;font-weight:600;white-space:nowrap} .marca small{display:block;font-size:20px;line-height:1.1}.marca-simbolo{width:58px;height:48px}.navegacao{display:flex;align-items:center;gap:34px;font-size:13px;font-weight:600}.navegacao a{padding:10px 0}.navegacao a:hover,.navegacao a.ativo{color:#884C55} .rotulo{font:700 11px/1.4 'DM Sans',sans-serif;letter-spacing:2.3px;color:#884C55} .apresentacao{padding:95px 0 105px;display:grid;grid-template-columns:1.05fr .95fr;gap:95px;align-items:center}.texto-hero h1{font-size:clamp(46px,5.6vw,75px);line-height:1.15;letter-spacing:-1.5px;margin:20px 0 28px}.texto-hero h1 em{font-weight:400;color:#884C55}.introducao{font-size:15px;line-height:1.95;color:#6f665d;max-width:540px;margin-bottom:18px}.introducao strong{color:#312E2B}.link-texto{display:inline-block;margin-top:17px;font-size:13px;font-weight:700;color:#884C55;border-bottom:1px solid #884C55;padding-bottom:7px}.foto-principal{margin:0;position:relative}.foto-principal img{display:block;width:100%;height:auto;max-height:585px;object-fit:cover;object-position:center 36%;border-radius:3px;box-shadow:19px 19px 0 #E4D9CD}.foto-principal figcaption{margin-top:35px;text-align:right;color:#84796c;font:italic 14px 'Playfair Display',serif}.manifesto{background:#e9e3d9;padding:95px 0}.manifesto-grid{display:grid;grid-template-columns:130px 1fr;gap:45px;max-width:890px}.aspas{font:170px/.75 'Playfair Display',serif;color:#884C55}.manifesto h2{font-size:clamp(32px,4vw,52px);line-height:1.25;max-width:700px;margin:20px 0}.manifesto h2 em,.secao-intro h2 em{font-weight:400;color:#884C55}.manifesto p:not(.rotulo){color:#6f665d;font-size:15px;line-height:1.9;max-width:650px}.funcionamento{padding:100px 0 115px}.secao-intro{text-align:center;max-width:680px;margin:0 auto 55px}.secao-intro h2{font-size:clamp(33px,4vw,50px);margin:16px 0}.secao-intro p:not(.rotulo){font-size:15px;line-height:1.9;color:#746b62}.etapas{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:26px}.etapas article{border-top:2px solid #C4A47D;padding:27px 20px 10px 0}.numero{font-size:12px;letter-spacing:2px;color:#87796b}.etapas h3{font-size:24px;margin:15px 0}.etapas p{font-size:14px;line-height:1.85;color:#766e65}.duas-bolinhas{display:flex;align-items:center;gap:6px;height:35px;margin-top:18px}.duas-bolinhas i{width:19px;height:19px;border-radius:50%;background:#53675A}.duas-bolinhas i+i{background:#884C55}.icone-livro{height:35px;margin-top:18px;font-size:28px;color:#884C55}.perfis-secao{background:#FAF7F1;padding:105px 0 115px}.perfis{display:grid;grid-template-columns:1fr 1fr;gap:26px}.perfil{display:grid;grid-template-columns:160px 1fr;min-height:230px;border:1px solid #e4d8ca;background:#fffaf3;transition:transform .2s,box-shadow .2s}.perfil:hover{transform:translateY(-3px);box-shadow:0 12px 28px #312e2b12}.perfil img{height:100%;width:100%;object-fit:cover}.perfil>div{padding:30px 25px;display:flex;flex-direction:column;align-items:start}.perfil span{font-size:10px;letter-spacing:2px;font-weight:700;color:var(--cor)}.perfil h3{font-size:26px;margin:13px 0}.perfil p{font-size:13px;line-height:1.65;color:#766e65}.perfil strong{margin-top:auto;padding-top:12px;font-size:12px;color:var(--cor)}.fecho{padding:92px 0 102px;text-align:center;background:#EAE3D8}.simbolo-fecho{display:flex;justify-content:center;gap:12px;margin:0 0 22px}.simbolo-fecho i{width:22px;height:22px;background:#53675A;border-radius:50%}.simbolo-fecho i+i{background:#884C55}.fecho h2{font-size:clamp(32px,4vw,49px);margin:16px 0 30px}.fecho a{display:inline-block;background:#312E2B;color:#F5F0E8;padding:15px 25px;font-size:13px;font-weight:700;border-radius:3px}.rodape{padding:32px 0;background:#312E2B;color:#f5f0e8}.rodape-conteudo{display:flex;align-items:center;justify-content:space-between;gap:20px}.rodape-conteudo>span{font:500 19px 'Playfair Display',serif}.rodape small{font-size:11px;letter-spacing:1px;color:#cbbfb3}.vinho{color:#cb8f96}
+@media(max-width:940px){.topo{flex-direction:column;gap:12px;padding:18px 0}.navegacao{gap:22px}.apresentacao{gap:40px}.perfil{grid-template-columns:130px 1fr}.perfil>div{padding:22px 18px}}
+@media(max-width:700px){.container{width:calc(100% - 32px)}.apresentacao{grid-template-columns:1fr;padding:65px 0 75px;gap:45px}.texto-hero h1{font-size:48px}.foto-principal{max-width:460px;margin-inline:auto}.foto-principal img{max-height:none}.manifesto{padding:70px 0}.manifesto-grid{grid-template-columns:1fr;gap:0}.aspas{font-size:105px}.funcionamento,.perfis-secao{padding:75px 0}.etapas{grid-template-columns:1fr;gap:14px}.perfis{grid-template-columns:1fr}.perfil{grid-template-columns:125px 1fr}.navegacao{flex-wrap:wrap;justify-content:center;gap:12px;font-size:11px}.rodape-conteudo{flex-direction:column;text-align:center}.secao-intro{margin-bottom:35px}}
+@media(max-width:380px){.perfil{grid-template-columns:100px 1fr}.perfil h3{font-size:21px}.perfil>div{padding:18px 13px}.texto-hero h1{font-size:41px}}
+</style>

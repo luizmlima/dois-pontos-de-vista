@@ -1,0 +1,239 @@
+/* Revisão responsiva — aplicada a todas as páginas. Sem dependências externas. */
+:root{color-scheme:light;--papel:#F5F0E8;--vinho:#884C55;--verde:#53675A;--grafite:#312E2B}
+html{scroll-padding-top:20px}
+body{min-width:280px;overflow-x:clip}
+img,video,svg{max-width:100%}
+img{height:auto}
+main{min-width:0}
+main :is(h1,h2,h3,p){overflow-wrap:break-word}
+main :is(.container,.hero,.grade,.cabeca-livro,.apresentacao,.manifesto-grid,.sobre-grade,.historia,.ferramentas,.duas-vozes-grid,.perfis,.lista-opinioes)>*{min-width:0}
+a,button,select,input{touch-action:manipulation}
+:focus-visible{outline:2px solid var(--vinho);outline-offset:3px}
+@media(hover:hover){a:not(.marca-site):not(.acao-primaria){text-underline-offset:4px}}
+@media(max-width:760px){
+  main .container{width:calc(100% - 36px)}
+  main .secao{padding-top:58px;padding-bottom:58px}
+  main .hero-arte{overflow:hidden}
+  main .apresentacao h1,main .hero h1,main .texto-hero h1{font-size:clamp(35px,8.5vw,58px);letter-spacing:-.025em}
+  main .secao-cabecalho{gap:16px}
+  main .ferramentas{flex-wrap:wrap}
+  main .notas{gap:20px}
+  main .aviso{overflow-wrap:anywhere}
+}
+@media(max-width:610px){
+  main .container{width:calc(100% - 32px)}
+  main .hero{padding-top:52px}
+  main .secao{padding:55px 0}
+  main .grade-livros{gap:22px}
+  main .duas-vozes-grid{gap:24px}
+  main .dois-simbolos{max-width:190px;margin:auto}
+  main .duas-vozes h2{font-size:clamp(32px,9vw,44px)}
+  main .sobre-grade{gap:30px}
+  main .perfis{gap:15px}
+  main .capa{max-width:100%}
+  main .cartao-info h2,main .livro h3{overflow-wrap:anywhere}
+  main .numeros{flex-wrap:wrap}
+  main .notas{justify-content:center}
+  main .artigo{margin:35px auto 65px}
+  main .artigo h1{font-size:clamp(34px,9vw,54px);line-height:1.2}
+  main .texto{font-size:16px;line-height:1.85}
+  main .texto h2{font-size:clamp(25px,6.8vw,32px);margin-top:38px}
+  main .texto :is(img,figure){max-width:100%;height:auto}
+  main .assinatura{gap:12px}
+  main .detalhes{gap:12px;line-height:1.6}
+  main .lista-opinioes .opiniao{padding:24px 20px}
+  main .retrato{max-width:min(320px,85%)}
+  main .retrato img{height:100%;object-fit:cover}
+  main .estatisticas{gap:8px}
+  main .estatisticas strong{font-size:clamp(25px,7vw,35px)}
+  main .estatisticas span{font-size:11px;line-height:1.45}
+  main .foto-principal img{width:100%;height:auto}
+  main .perfil>div{min-width:0}
+}
+@media(max-width:400px){
+  main .grade{grid-template-columns:1fr !important}
+  main .grade-livros{grid-template-columns:1fr !important}
+  main .grade .capa{aspect-ratio:4/4.5}
+  main .filtro{min-height:42px}
+  main .estatisticas{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+/* Acabamento mobile v2: proporções menores, mais área útil, menos blocos enormes. */
+@media (max-width:700px){
+  html{font-size:15px}
+  main .container{width:calc(100% - 40px);max-width:560px}
+  main .secao{padding-top:43px;padding-bottom:43px}
+  main .hero{padding-top:35px;padding-bottom:40px;gap:12px;min-height:0}
+  main .hero h1,main .hero-texto h1,main .texto-hero h1{font-size:clamp(32px,8vw,43px);line-height:1.16;letter-spacing:-.035em;margin-bottom:17px}
+  main .hero-descricao{font-size:14px;line-height:1.7;margin-bottom:22px}
+  main .hero-arte{min-height:190px;max-height:225px}
+  main .livro-hero{max-width:225px;max-height:185px}
+  main .circulo-fundo{max-width:210px}
+  main .sobretitulo,main .rotulo{font-size:10px;letter-spacing:1.3px;margin-bottom:12px}
+  main h2{font-size:clamp(26px,7vw,34px);line-height:1.2;letter-spacing:-.025em}
+  main .secao-cabecalho{margin-bottom:23px;gap:10px}
+  main .secao-cabecalho .link-discreto{font-size:12px}
+  main .botao,main .acao-primaria,main .acao-secundaria{padding:12px 16px;font-size:12px;gap:10px;min-height:44px;line-height:1.35}
+  main .botao span{font-size:15px}
+  main .duas-vozes-grid,main .sobre-grade{gap:19px}
+  main .duas-vozes h2{font-size:clamp(29px,7.5vw,37px);margin-bottom:13px}
+  main .duas-vozes p:not(.sobretitulo),main .sobre p:not(.sobretitulo){font-size:14px;line-height:1.7}
+  main .dois-simbolos{max-width:130px}
+  main .leitores-livro{width:130px}
+  main .botao-leituras,main .botao-sobre{margin-top:12px}
+  main .grade-livros{grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+  main .card-livro .capa{height:170px;padding:18px 12px;gap:7px}
+  main .card-livro .capa-titulo{font-size:clamp(17px,4.7vw,23px)}
+  main .card-livro .capa-autor{font-size:8px;letter-spacing:.7px}
+  main .card-livro .capa-decoracao{font-size:17px}
+  main .card-corpo{padding:12px}
+  main .card-livro h3{font-size:18px;line-height:1.25}
+  main .livro-autor,main .livro-descricao{font-size:11px;line-height:1.5}
+  main .livro-descricao{min-height:0;margin-bottom:12px}
+  main .card-rodape{font-size:10px;flex-wrap:wrap;gap:4px}
+  main .perfil{min-height:180px;padding:13px}
+  main .perfil strong{font-size:17px}
+  main .perfil small{font-size:10px}
+  main .foto-perfil{width:72px;height:72px;margin-bottom:8px}
+  main .apresentacao{padding:45px 0 30px}
+  main .apresentacao h1{font-size:clamp(33px,8vw,43px);line-height:1.18;letter-spacing:-.03em;margin:13px 0}
+  main .apresentacao p{font-size:14px;line-height:1.65}
+  main .numeros{margin-top:20px;gap:12px;font-size:11px}
+  main .numeros strong{font-size:21px}
+  main .biblioteca{padding:8px 0 55px}
+  main .ferramentas{gap:9px}
+  main .busca input{height:44px;font-size:13px}
+  main .ordenacao{min-height:44px;font-size:12px}
+  main .filtros{margin:18px 0;gap:7px}
+  main .filtro{padding:9px 11px;font-size:11px;min-height:40px}
+  main .subbarra{padding:13px 0 18px}
+  main .grade{grid-template-columns:repeat(2,minmax(0,1fr));gap:25px 14px}
+  main .grade .capa{aspect-ratio:3/4;min-height:0;padding:13px;gap:8px;box-shadow:4px 5px 0 #e5dbcf}
+  main .grade .capa strong{font-size:clamp(16px,4.3vw,24px)}
+  main .cartao-info{padding-top:13px}
+  main .cartao-info h2{font-size:17px;line-height:1.25;margin:7px 0 4px}
+  main .cartao-info .avaliacoes{font-size:11px;gap:6px;padding-top:10px}
+  main .encerramento{padding:40px 0}
+  main .encerramento h2{font-size:clamp(25px,6vw,33px)}
+  main .manifesto,main .funcionamento,main .perfis-secao{padding-top:43px;padding-bottom:43px}
+  main .foto-principal img{max-height:460px;object-fit:cover;object-position:center 30%}
+  main .cabeca-livro{gap:20px}
+  main .sinopse{font-size:14px;line-height:1.75}
+  main .lista-opinioes .opiniao{padding:19px 16px}
+  main .artigo{margin:25px auto 48px}
+  main .artigo h1{font-size:clamp(30px,8vw,42px);line-height:1.2}
+  main .texto{font-size:15px;line-height:1.78}
+  main .texto h2{font-size:clamp(23px,6vw,29px);margin-top:30px}
+}
+@media (max-width:400px){
+  main .container{width:calc(100% - 32px)}
+  main .grade,main .grade-livros{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  main .card-livro .capa{height:150px;padding:12px 9px}
+  main .card-livro .capa-titulo{font-size:16px}
+  main .card-corpo{padding:10px}
+  main .card-livro h3{font-size:16px}
+  main .grade .capa{aspect-ratio:3/4}
+  main .grade .capa strong{font-size:17px}
+  main .grade .capa-detalhe{font-size:6px;letter-spacing:.7px}
+  main .grade .capa-autor{font-size:8px}
+  main .perfis{gap:10px}
+}
+@media (max-width:330px){
+  main .grade,main .grade-livros{grid-template-columns:1fr!important}
+  main .card-livro .capa{height:190px}
+}
+/* A especificidade evita a coluna única imposta pelos antigos estilos locais. */
+@media (min-width:331px) and (max-width:400px){
+  main .biblioteca .grade,main .leituras .grade-livros{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+
+/* Carrossel responsivo: um cartão por vez em celulares, com deslize horizontal. */
+@media(max-width:700px){
+  main .hero-arte{display:none!important}
+  main .grade-livros{display:flex!important;grid-template-columns:none!important;gap:14px!important;overflow-x:auto!important;scroll-snap-type:x mandatory!important;padding:3px 2px 16px!important}
+  main .grade-livros>.card-livro{flex:0 0 100%!important;scroll-snap-align:start!important}
+  main .card-livro .capa{height:225px;padding:22px!important}
+  main .card-livro .capa-titulo{font-size:clamp(22px,5.8vw,28px)!important}
+  main .card-corpo{padding:18px!important}
+  main .card-livro h3{font-size:21px!important}
+  main .carrossel-controles{margin:0 0 13px!important;justify-content:center}
+}
+@media(min-width:701px) and (max-width:850px){
+  main .grade-livros{display:flex!important;grid-template-columns:none!important}
+  main .grade-livros>.card-livro{flex:0 0 calc((100% - 26px)/2)!important}
+}
+
+
+/* Identidade e acabamento final — regras compartilhadas. */
+:root{
+  --papel:#F5F0E8; --papel-claro:#FFF9F1; --tinta:#312E2B;
+  --vinho:#884C55; --vinho-escuro:#713D46; --salvia:#53675A;
+  --areia:#C4A47D; --linha:#DDD2C4;
+}
+html{scrollbar-gutter:stable}
+body{color:var(--tinta);background:var(--papel)}
+main :is(.botao,.acao-primaria,.acao-secundaria){border-radius:6px;transition:background-color .2s,box-shadow .2s,transform .2s;text-decoration:none}
+main :is(.botao,.acao-primaria,.acao-secundaria):focus-visible{outline:2px solid var(--vinho);outline-offset:4px}
+@media(hover:hover){
+  main :is(.botao,.acao-primaria,.acao-secundaria):hover{transform:translateY(-2px);box-shadow:0 7px 18px #312e2b1a}
+  main :is(.card-livro,.cartao,.opiniao,.perfil){transition:box-shadow .2s,transform .2s}
+}
+main :is(.apresentacao,.manifesto,.perfis-secao,.encerramento,.funcionamento,.secao){scroll-margin-top:24px}
+main :is(.artigo,.texto){hyphens:auto}
+main img{max-width:100%}
+main :is(.cartao,.card-livro,.perfil,.opiniao){min-width:0}
+
+/* Home: a identidade da marca só aparece grande no desktop.
+   No celular, textos e chamadas ficam alinhados ao centro; artigos não. */
+@media(max-width:700px){
+  main .hero{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:0;padding:35px 0 42px;min-height:0}
+  main .hero-texto{width:100%;max-width:520px;text-align:center}
+  main .hero .sobretitulo{display:block;text-align:center}
+  main .hero h1{font-size:clamp(32px,8.2vw,44px);line-height:1.17;letter-spacing:-.035em;margin:0 0 16px}
+  main .hero-descricao{font-size:14px;line-height:1.73;max-width:38ch;margin:0 auto 23px}
+  main .hero .botao{margin-inline:auto}
+  main .hero-arte{display:none!important}
+  main .duas-vozes-grid{display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px}
+  main .duas-vozes-grid>div:last-child{width:100%;text-align:center}
+  main .duas-vozes-grid .sobretitulo{text-align:center}
+  main .duas-vozes-grid p:not(.sobretitulo){margin-left:auto;margin-right:auto;max-width:45ch}
+  main .dois-simbolos{width:100%;display:flex;align-items:center;justify-content:center;margin:0 auto;max-width:150px}
+  main .marca-secao{width:130px;max-width:100%;height:auto;display:block}
+  main .sobre-grade{display:flex;flex-direction:column;align-items:center;gap:26px}
+  main .sobre-grade>div:first-child{width:100%;max-width:520px;text-align:center}
+  main .sobre-grade>div:first-child .sobretitulo{text-align:center}
+  main .sobre-grade>div:first-child p:not(.sobretitulo){margin-inline:auto;max-width:47ch}
+  main .botao-leituras,main .botao-sobre{display:inline-flex;align-items:center;justify-content:center;margin-top:14px}
+  main .secao-cabecalho{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:8px;margin-bottom:19px}
+  main .secao-cabecalho>div{width:100%;text-align:center}
+  main .secao-cabecalho .sobretitulo{text-align:center}
+  main .carrossel-controles{justify-content:center;margin:0 0 16px}
+  main .grade-livros{touch-action:pan-x pan-y;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
+  main .grade-livros>.card-livro{scroll-snap-align:start}
+  main .card-livro{text-align:left}
+  main .card-livro .card-rodape{text-align:left}
+  main .perfis{width:100%}
+  main .botao,main .acao-primaria,main .acao-secundaria{max-width:100%;white-space:normal;text-align:center}
+  main :is(.foto-principal,.retrato,.capa){max-width:100%}
+  main .apresentacao{padding-top:40px;padding-bottom:34px}
+  main .apresentacao h1{font-size:clamp(32px,8vw,43px)}
+  main .foto-principal img{max-height:470px;object-fit:cover}
+  main .texto-hero h1{font-size:clamp(33px,8.4vw,45px)}
+  main .artigo{max-width:100%}
+  main .artigo .texto{text-align:left}
+}
+@media(max-width:380px){
+  main .hero{padding-top:26px;padding-bottom:33px}
+  main .hero h1{font-size:clamp(29px,8vw,36px)}
+  main .hero-descricao{font-size:13.5px}
+  main .perfis{gap:10px}
+  main .secao{padding-top:35px;padding-bottom:35px}
+}
+@media(prefers-reduced-motion:reduce){
+  main .grade-livros{scroll-behavior:auto!important}
+}
+
+/* Capa real: quando informada no Markdown, substitui a capa ilustrativa. */
+main .capa{position:relative;overflow:hidden}
+main .capa-imagem{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:center;background:#f8f3eb;z-index:4;display:block}

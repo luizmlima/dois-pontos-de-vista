@@ -1,0 +1,53 @@
+---
+interface Acao { texto: string; href: string; contexto?: 'preservar' | 'origem' }
+interface Props {
+  rotulo?: string;
+  titulo: string;
+  descricao?: string;
+  principal: Acao;
+  secundaria?: Acao;
+  terciaria?: Acao;
+  compacto?: boolean;
+}
+const { rotulo = 'CONTINUE EXPLORANDO', titulo, descricao, principal, secundaria, terciaria, compacto = false } = Astro.props;
+const contexto = (acao: Acao) => ({
+  'data-preservar-origem': acao.contexto === 'preservar' ? '' : undefined,
+  'data-voltar-origem': acao.contexto === 'origem' ? '' : undefined,
+});
+---
+<section class:list={['encerramento-padrao', { compacto }]} aria-label="Continue explorando">
+  <div class="encerramento-conteudo">
+    <p class="rotulo-padrao">{rotulo}</p>
+    <h2>{titulo}</h2>
+    {descricao && <p class="descricao-padrao">{descricao}</p>}
+    <div class="acoes-padrao">
+      <a class="botao-padrao principal" href={principal.href} {...contexto(principal)}>{principal.texto}<span aria-hidden="true">↗</span></a>
+      {secundaria && <a class="botao-padrao secundario" href={secundaria.href} {...contexto(secundaria)}>{secundaria.texto}<span aria-hidden="true">←</span></a>}
+    </div>
+    {terciaria && <a class="link-terciario" href={terciaria.href} {...contexto(terciaria)}>{terciaria.texto} <span aria-hidden="true">↗</span></a>}
+  </div>
+</section>
+<style>
+  .encerramento-padrao{background:#eae3d8;padding:clamp(44px,6vw,80px) 20px;text-align:center;color:#312e2b}
+  .encerramento-conteudo{max-width:720px;margin-inline:auto}
+  .rotulo-padrao{margin:0 0 15px;font:700 10px/1.5 'DM Sans',sans-serif;letter-spacing:2px;color:#884c55}
+  h2{font:500 clamp(27px,3.8vw,43px)/1.25 'Playfair Display',Georgia,serif;margin:0 0 15px;text-wrap:balance}
+  .descricao-padrao{font:400 14px/1.8 'DM Sans',sans-serif;color:#6a6158;max-width:600px;margin:0 auto 25px}
+  .acoes-padrao{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px;margin-top:23px}
+  .botao-padrao{min-height:46px;display:inline-flex;align-items:center;justify-content:center;gap:12px;padding:12px 21px;border:1px solid #884c55;border-radius:5px;font:700 13px/1.35 'DM Sans',sans-serif;text-decoration:none;transition:background .2s,color .2s,transform .2s}
+  .botao-padrao.principal{background:#884c55;color:#fffaf3}
+  .botao-padrao.principal:hover{background:#713d45;border-color:#713d45;transform:translateY(-2px)}
+  .botao-padrao.secundario{background:transparent;color:#884c55}
+  .botao-padrao.secundario:hover{background:#fff8f0;transform:translateY(-2px)}
+  .botao-padrao:focus-visible,.link-terciario:focus-visible{outline:2px solid #312e2b;outline-offset:3px}
+  .link-terciario{display:inline-block;font:600 12px 'DM Sans',sans-serif;color:#705e57;margin-top:19px;text-decoration:underline;text-underline-offset:5px}
+  .compacto{border-radius:5px;margin:0 auto clamp(34px,5vw,70px);padding:clamp(35px,5vw,60px) 18px}
+  .compacto h2{font-size:clamp(26px,3vw,37px)}
+  @media(max-width:600px){
+    .encerramento-padrao{padding:43px 18px}
+    .acoes-padrao{flex-direction:column;gap:10px}
+    .botao-padrao{width:100%;max-width:320px;min-height:44px;padding:11px 15px;font-size:12px}
+    .descricao-padrao{font-size:13px;line-height:1.7}
+  }
+  @media(prefers-reduced-motion:reduce){.botao-padrao{transition:none}.botao-padrao:hover{transform:none}}
+</style>

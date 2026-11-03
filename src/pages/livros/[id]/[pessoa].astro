@@ -1,0 +1,72 @@
+---
+import '../../../styles/mobile-polish.css';
+import Header from '../../../components/Header.astro';
+import Footer from '../../../components/Footer.astro';
+import Encerramento from '../../../components/Encerramento.astro';
+import { livros, opinioes } from '../../../data/livros';
+import { render } from 'astro:content';
+
+export function getStaticPaths() {
+  return opinioes.map(opiniao => ({
+    params: { id: opiniao.livroId, pessoa: opiniao.pessoa },
+    props: { opiniao, livro: livros.find(l => l.id === opiniao.livroId)! }
+  }));
+}
+const { opiniao, livro } = Astro.props;
+const { Content } = await render(opiniao.entry);
+const nota = opiniao.pessoa === 'ele' ? livro.notaEle : livro.notaEla;
+const notaFormatada = nota === null ? 'Sem nota' : nota.toFixed(1).replace('.', ',') + ' / 5';
+const outraPessoa = opiniao.pessoa === 'ele' ? 'ela' : 'ele';
+const outraOpiniao = opinioes.find(o => o.livroId === livro.id && o.pessoa === outraPessoa);
+---
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" type="image/png" href="/favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content={`${opiniao.titulo}: opinião sobre ${livro.titulo} no Dois Pontos de Vista.`} />
+  <title>{opiniao.titulo} — {livro.titulo} | Dois Pontos de Vista</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <Header />
+  <main id="conteudo-principal" class="container">
+    <div class="voltar"><a data-preservar-origem href={`/livros/${livro.id}`}>← Voltar para {livro.titulo}</a></div>
+    <article class="artigo">
+      <p class="rotulo">PONTO DE VISTA {opiniao.pessoa === 'ele' ? 'DELE' : 'DELA'}</p><p class="assinatura">Por <a href={opiniao.pessoa === 'ele' ? '/autores/luiz-anselmo' : '/autores/heloisa-marques'}>{opiniao.pessoa === 'ele' ? 'Luiz Anselmo' : 'Heloísa Marques'}</a></p>
+      <h1>{opiniao.titulo}</h1>
+      <div class="detalhes"><span><b>Livro</b> · <a href={`/livros/${livro.id}`}>{livro.titulo}</a></span><span><b>Leitura</b> · {opiniao.data}</span><span><b>Avaliação</b> · {notaFormatada}</span></div>
+      {opiniao.demonstrativo && <div class="aviso"><strong>Conteúdo de exemplo:</strong> esta opinião ainda é demonstrativa.</div>}
+      <div class="texto"><Content /></div>
+    </article>
+    <Encerramento compacto titulo={outraOpiniao ? 'Dois olhares, uma história.' : 'Uma história, por enquanto um olhar.'} descricao={outraOpiniao ? 'Conheça outra interpretação desta obra ou retorne à sinopse e às avaliações.' : 'Explore novamente a sinopse, a avaliação e os detalhes desta obra.'} principal={outraOpiniao ? { texto: 'Ler o outro ponto de vista', href: `/livros/${livro.id}/${outraPessoa}`, contexto: 'preservar' } : { texto: 'Voltar à página do livro', href: `/livros/${livro.id}`, contexto: 'preservar' }} secundaria={outraOpiniao ? { texto: 'Voltar à página do livro', href: `/livros/${livro.id}`, contexto: 'preservar' } : undefined} terciaria={{ texto: 'Voltar à seção anterior', href: '/estante', contexto: 'origem' }} />
+  </main>
+  <Footer />
+<script>import "../../../scripts/contexto-navegacao";</script>
+</body>
+</html>
+<style>
+:global(*){box-sizing:border-box}:global(body){margin:0;background:#F5F0E8;color:#312E2B;font-family:'DM Sans',sans-serif;-webkit-font-smoothing:antialiased}:global(a){color:inherit;text-decoration:none}.container{width:min(1080px,calc(100% - 48px));margin:auto}header{border-bottom:1px solid #ded4c6}.topo{min-height:92px;display:flex;justify-content:space-between;align-items:center;gap:24px}.marca{display:flex;gap:8px;align-items:center;font:600 22px 'Playfair Display',serif;white-space:nowrap}.marca small{font-size:17px}.pontos{display:flex;gap:5px}.pontos i{display:block;width:10px;height:10px;background:#53675A;border-radius:50%}.pontos i+ i{background:#884C55}nav{display:flex;gap:25px;font-size:13px;font-weight:600}nav a:hover,.voltar a:hover{color:#884C55}.voltar{margin:40px 0;color:#884C55;font-weight:600;font-size:13px}.artigo{max-width:760px;margin:72px auto 95px}.rotulo{font-size:11px;color:#884C55;letter-spacing:2px;font-weight:700}.artigo h1{font:500 clamp(42px,6vw,70px)/1.2 'Playfair Display',serif;margin:18px 0 28px}.detalhes{display:flex;flex-wrap:wrap;gap:13px 24px;font-size:13px;color:#776F67;border-top:1px solid #ded4c6;border-bottom:1px solid #ded4c6;padding:22px 0}.detalhes b{color:#312E2B}.aviso{margin:48px 0 36px;background:#ede4d7;border-left:3px solid #884C55;padding:16px 20px;font-size:12px;line-height:1.6}.texto{font:18px/2 Georgia,serif;color:#443e37}.texto p{margin:0 0 27px}.texto h2{font:500 31px/1.35 'Playfair Display',serif;margin:54px 0 19px}.outra{text-align:center;background:#eae3d8;padding:60px 20px;margin:0 auto 80px;max-width:800px}.outra h2{font:500 37px 'Playfair Display',serif;margin:17px 0}.outra p:not(.rotulo){color:#776F67;font-size:14px;line-height:1.8}.outra a{display:inline-block;color:#884C55;font-size:13px;font-weight:700;margin-top:10px;border-bottom:1px solid currentColor;padding-bottom:6px}footer{background:#312E2B;color:#f5f0e8}.rodape{min-height:95px;display:flex;justify-content:space-between;align-items:center}.rodape>span{font:500 21px 'Playfair Display',serif}.rodape small{color:#cbbfb3;font-size:11px;letter-spacing:1px}.vinho{color:#cb8f96}@media(max-width:850px){.topo{flex-direction:column;padding:18px 0}nav{flex-wrap:wrap;justify-content:center;gap:15px}}@media(max-width:610px){.container{width:calc(100% - 32px)}.artigo{margin-top:55px}.texto{font-size:16px;line-height:1.9}.rodape{flex-direction:column;gap:10px;justify-content:center;padding:22px;text-align:center}}
+</style>
+
+<style>.assinatura{color:#776F67;font-size:14px;margin-top:15px}.assinatura a{color:#884C55;font-weight:700;text-decoration:underline;text-underline-offset:4px}</style>
+
+<style>
+  .acoes-opiniao{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:12px;margin-top:26px}
+  .outra .acoes-opiniao a{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:48px;padding:13px 20px;margin:0;border:1px solid #884C55;border-radius:5px;text-decoration:none;font:700 13px/1.4 'DM Sans',sans-serif;transition:background .2s ease,color .2s ease,transform .2s ease}
+  .outra .acoes-opiniao a:hover{transform:translateY(-2px)}
+  .outra .acoes-opiniao .acao-primaria{background:#884C55;color:#fffaf3}
+  .outra .acoes-opiniao .acao-primaria:hover{background:#713e47}
+  .outra .acoes-opiniao .acao-secundaria{background:transparent;color:#884C55}
+  .outra .acoes-opiniao .acao-secundaria:hover{background:#fff8ef}
+  @media(max-width:560px){.outra{padding:40px 18px;margin-bottom:55px}.outra h2{font-size:clamp(27px,8vw,36px)}.acoes-opiniao{flex-direction:column}.outra .acoes-opiniao a{width:100%;max-width:330px}}
+  @media(prefers-reduced-motion:reduce){.outra .acoes-opiniao a{transition:none}.outra .acoes-opiniao a:hover{transform:none}}
+</style>
+
+<style>
+  .outra .voltar-origem{margin:22px 0 0;font-size:13px}
+  .outra .voltar-origem a{border:0;padding:8px;text-underline-offset:4px;text-decoration:underline}
+</style>

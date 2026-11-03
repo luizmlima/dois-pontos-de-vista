@@ -1,16 +1,269 @@
 ---
+import '../styles/mobile-polish.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { ultimasLeituras as leituras } from '../data/livros';
 ---
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Dois Pontos de Vista: um espaço para nossas leituras, opiniões e perspectivas." />
+    <title>Dois Pontos de Vista — Leituras, opiniões e perspectivas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <Header />
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
+    <main id="conteudo-principal">
+      <section class="hero container">
+        <div class="hero-texto">
+          <p class="sobretitulo"><span class="ponto verde"></span> UM DIÁRIO DE LEITURAS A DOIS <span class="ponto vinho"></span></p>
+          <h1>Duas perspectivas.<br /><em>Infinitas histórias.</em></h1>
+          <p class="hero-descricao">Nem sempre lemos os mesmos livros. Nem sempre chegamos às mesmas conclusões. Aqui, guardamos as histórias que passam por nós e o que cada uma deixa pelo caminho.</p>
+          <a href="/estante" class="botao">Explore nossas leituras <span aria-hidden="true">↗</span></a>
+        </div>
+        <div class="hero-arte" aria-label="Ilustração de dois leitores e um livro aberto" role="img">
+          <img class="livro-hero" src="/imagens/logo-dois-pontos-de-vista.png" alt="Dois leitores representados por dois círculos sobre as páginas de um livro aberto" width="885" height="508" />
+        </div>
+      </section>
+
+      <section class="secao leituras" id="estante">
+        <div class="container">
+          <div class="secao-cabecalho">
+            <div><p class="sobretitulo">NOSSA BIBLIOTECA</p><h2>Últimas leituras<span class="cursor-titulo" aria-hidden="true"></span></h2></div>
+            <a class="link-discreto" href="/estante">Ver toda a estante ↗</a>
+          </div>
+          <div class="carrossel-controles" aria-label="Controles das últimas leituras">
+            <button type="button" class="carrossel-seta" data-direcao="anterior" aria-label="Leitura anterior" disabled>←</button>
+            <span class="carrossel-contador" id="carrossel-contador" aria-live="polite">{leituras.length ? `1 de ${leituras.length}` : "Nenhuma leitura"}</span>
+            <button type="button" class="carrossel-seta" data-direcao="proxima" aria-label="Próxima leitura">→</button>
+          </div>
+          <div class="carrossel-bolinhas" id="carrossel-bolinhas" role="group" aria-label="Páginas das últimas leituras"></div>
+          <div class="grade-livros" id="carrossel-leituras" tabindex="0" role="region" aria-roledescription="carrossel" aria-label="Últimas leituras">
+            {leituras.map((livro) => (
+              <article class="card-livro">
+                <a href={`/livros/${livro.id}?origem=inicio`} class="capa" style={`background:${livro.cor}`} aria-label={`Abrir ${livro.titulo}`}>
+                  {livro.capa && <img class="capa-imagem" src={livro.capa} alt="" loading="lazy" onerror="this.remove()" onload="if(this.naturalWidth < 50) this.remove()" />}
+                  <span class="capa-decoracao" aria-hidden="true">✦</span>
+                  <span class="capa-titulo">{livro.titulo}</span>
+                  <span class="capa-autor">{livro.autor}</span>
+                </a>
+                <div class="card-corpo">
+                  <p class={`etiqueta ${livro.tipo === 'dupla' ? 'etiqueta-dupla' : ''}`}>
+                    {livro.tipo === 'dupla' ? '● ●  LEITURA A DOIS' : `●  LEITURA ${livro.pessoa.toUpperCase()}`}
+                  </p>
+                  <h3><a href={`/livros/${livro.id}?origem=inicio`}>{livro.titulo}</a></h3>
+                  <p class="livro-autor">{livro.autor}</p>
+                  <p class="livro-descricao">{livro.editorial}</p>
+                  <div class="card-rodape">
+                    <div class="notas-leitores" aria-label="Avaliações dos leitores">
+                      {livro.notaEle !== null && <span class="nota-leitor nota-luiz"><span class="nota-ponto" aria-hidden="true">●</span> Luiz: <strong>{livro.notaEle.toFixed(1).replace('.', ',')}/5</strong></span>}
+                      {livro.notaEla !== null && <span class="nota-leitor nota-heloisa"><span class="nota-ponto" aria-hidden="true">●</span> Heloísa: <strong>{livro.notaEla.toFixed(1).replace('.', ',')}/5</strong></span>}
+                      {livro.notaEle === null && livro.notaEla === null && <span>Sem avaliação</span>}
+                    </div>
+                    <span class="data-publicacao" title="Data da publicação mais recente">{livro.data}</span>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+          <p class="aviso-demo">Os livros e as sinopses de demonstração são exemplos editáveis em Markdown.</p>
+        </div>
+      </section>
+
+      <section class="secao duas-vozes" id="a-dois">
+        <div class="container duas-vozes-grid">
+          <div class="dois-simbolos" aria-hidden="true">
+            <img class="marca-secao" src="/imagens/logo-dois-pontos-de-vista.png" width="885" height="508" alt="" loading="lazy" />
+          </div>
+          <div>
+            <p class="sobretitulo">QUANDO OS CAMINHOS SE ENCONTRAM</p>
+            <h2>Um livro.<br /><em>Dois pontos de vista.</em></h2>
+            <p>Às vezes um de nós lê primeiro. Meses ou anos depois, o outro encontra a mesma história. Quando isso acontece, a página do livro passa a reunir nossas avaliações e os links para cada opinião completa — cada uma com seu próprio espaço.</p>
+            <a class="botao botao-leituras" href="/leituras-a-dois">Explorar leituras a dois <span aria-hidden="true">↗</span></a>
+          </div>
+        </div>
+      </section>
+
+      <section class="secao sobre" id="sobre">
+        <div class="container sobre-grade">
+          <div>
+            <p class="sobretitulo">QUEM ESTÁ POR TRÁS DAS PÁGINAS?</p>
+            <h2>Prazer, somos <em>dois leitores.</em><span class="cursor-titulo" aria-hidden="true"></span></h2>
+            <p>Este é o nosso cantinho para falar dos livros que amamos, dos que nos desafiam e até daqueles sobre os quais discordamos.</p>
+            <p>Cada um tem sua própria estante, sua biografia e suas avaliações. O que une tudo é a vontade de compartilhar o prazer da leitura.</p>
+            <a class="botao botao-sobre" href="/sobre">Conheça nossa história <span aria-hidden="true">↗</span></a>
+          </div>
+          <div class="perfis">
+            <a href="/autores/luiz-anselmo" class="perfil perfil-verde"><img class="foto-perfil" src="/imagens/luiz-anselmo.jpg" alt="Luiz Anselmo"/><strong>Luiz Anselmo</strong><small>O olhar dele · biografia e avaliações</small></a>
+            <a href="/autores/heloisa-marques" class="perfil perfil-vinho"><img class="foto-perfil" src="/imagens/heloisa-marques.jpg" alt="Heloísa Marques"/><strong>Heloísa Marques</strong><small>O olhar dela · biografia e avaliações</small></a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <Footer />
+  </body>
 </html>
+
+<style>
+  :global(*){box-sizing:border-box}
+  :global(html){scroll-behavior:smooth}
+  :global(body){margin:0;background:#F5F0E8;color:#312E2B;font-family:'DM Sans',sans-serif;-webkit-font-smoothing:antialiased}
+  :global(a){color:inherit;text-decoration:none}
+  :global(h1),:global(h2),:global(h3){font-family:'Playfair Display',Georgia,serif}
+  .container{width:min(1120px,calc(100% - 48px));margin:auto}
+  .cabecalho{border-bottom:1px solid #ddd2c1;background:#F5F0E8}
+  .topo{display:flex;align-items:center;justify-content:space-between;gap:28px;min-height:94px}
+  .marca{display:flex;align-items:center;gap:10px;font-family:'Playfair Display',serif;font-size:23px;font-weight:600;line-height:1.03;white-space:nowrap}
+  .marca small{display:block;font-size:20px}.marca-simbolo{width:63px;height:53px;flex-shrink:0}
+  .navegacao{display:flex;align-items:center;gap:34px;font-size:13px;font-weight:600}.navegacao a{padding:10px 0}.navegacao a:hover,.navegacao .ativo{color:#884C55}
+  .hero{min-height:565px;display:grid;grid-template-columns:1.12fr 1fr;align-items:center;gap:55px;padding-top:70px;padding-bottom:80px}
+  .sobretitulo{font-size:11px;font-weight:700;letter-spacing:2.2px;color:#884C55;margin:0 0 23px}.ponto{display:inline-block;width:6px;height:6px;border-radius:50%;vertical-align:middle}.verde{background:#53675A}.vinho{background:#884C55;color:#884C55}
+  h1{font-size:clamp(42px,5vw,65px);line-height:1.18;letter-spacing:-1.8px;font-weight:500;margin:0 0 26px}h1 em,h2 em{color:#884C55;font-weight:400}
+  .hero-descricao{font-size:16px;line-height:1.9;max-width:530px;color:#655e56;margin:0 0 34px}
+  .botao{display:inline-flex;gap:25px;align-items:center;background:#884C55;color:white;padding:16px 23px;border-radius:3px;font-size:13px;font-weight:600}.botao:hover{background:#6f3942}.botao span{font-size:19px}
+  .hero-arte{position:relative;min-height:320px;display:flex;align-items:center;justify-content:center}.livro-hero{position:relative;width:min(100%,410px);height:auto;object-fit:contain;filter:drop-shadow(0 8px 12px #312e2b10)}
+  .secao{padding:88px 0}.leituras{background:#fffaf3}.secao-cabecalho{display:flex;align-items:end;justify-content:space-between;margin-bottom:36px;gap:20px}.secao-cabecalho .sobretitulo{margin-bottom:10px}h2{font-size:clamp(31px,3.6vw,45px);line-height:1.25;font-weight:500;margin:0}.link-discreto{font-size:13px;color:#817366}
+  .card-livro h3 a:hover{color:#884C55}.card-livro .capa{text-decoration:none}.card-livro .capa:hover{filter:brightness(1.08)}.grade-livros{display:flex;gap:26px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none;overscroll-behavior-x:contain;padding:4px 2px 22px}.grade-livros::-webkit-scrollbar{display:none}.grade-livros>.card-livro{flex:0 0 calc((100% - 52px)/3);min-width:0;scroll-snap-align:start;scroll-snap-stop:always}
+  .carrossel-controles{display:flex;align-items:center;justify-content:flex-end;gap:12px;margin:-11px 0 17px}.carrossel-seta{display:grid;place-items:center;background:#fffaf3;border:1px solid #d8c9b9;color:#884C55;border-radius:50%;height:40px;width:40px;font-size:22px;cursor:pointer;transition:background .2s,border-color .2s}.carrossel-seta:hover:not(:disabled){background:#f0e4df;border-color:#884C55}.carrossel-seta:disabled{opacity:.35;cursor:not-allowed}.carrossel-seta:focus-visible,.grade-livros:focus-visible{outline:2px solid #884C55;outline-offset:3px}.carrossel-contador{font:600 12px 'DM Sans',sans-serif;color:#766b62;min-width:68px;text-align:center}.card-livro{background:#fff;border:1px solid #ece3d7;box-shadow:0 10px 25px #35292008;overflow:hidden}.capa{height:260px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:32px 38px;color:white;font-family:'Playfair Display',serif;position:relative}.crime{background:#344441}.orgulho{background:#90616a}.biblioteca{background:#394b6e}.orwell{background:#923D37}.hobbit{background:#526E58}.colleen{background:#B37B74}.capa:before{content:'';position:absolute;inset:13px;border:1px solid #ffffff5c;pointer-events:none}.capa-decoracao{font-size:29px;opacity:.85}.capa-titulo{font-size:27px;line-height:1.25}.capa-autor{font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:1.4px;text-transform:uppercase;opacity:.8}.card-corpo{padding:23px}.etiqueta{font-size:10px;font-weight:700;letter-spacing:1.1px;color:#53675A;margin:0 0 12px}.etiqueta-dupla{color:#884C55}.card-livro h3{font-size:22px;margin:0 0 5px;font-weight:500}.livro-autor{font-size:12px;color:#837a71;margin:0 0 13px}.livro-descricao{font-size:13px;line-height:1.6;min-height:42px;margin:0 0 18px;color:#665f58}.card-rodape{border-top:1px solid #eee6dc;padding-top:15px;display:flex;justify-content:space-between;font-size:11px;color:#81766e;gap:8px}.aviso-demo{margin:20px 0 0;font-size:11px;color:#867b6e}
+  .notas-leitores{display:flex;gap:7px 14px;flex-wrap:wrap;align-items:center;min-width:0}
+  .nota-leitor{white-space:nowrap;color:#665f58;font-size:11px}
+  .nota-leitor strong{color:#312E2B;font-weight:700}
+  .nota-luiz .nota-ponto{color:#53675A}
+  .nota-heloisa .nota-ponto{color:#884C55}
+  .data-publicacao{white-space:nowrap;margin-left:auto}
+  .card-rodape{flex-wrap:wrap;align-items:center;row-gap:8px}
+  .marca-secao{width:220px;max-width:100%;height:auto;display:block}
+  .botao-leituras{margin-top:20px}
+  .botao-sobre{margin-top:22px;transition:background .2s ease,transform .2s ease}
+  .botao-sobre:hover{transform:translateY(-2px)}
+  .duas-vozes{background:#e8e6db}.duas-vozes-grid{display:grid;grid-template-columns:280px 1fr;gap:95px;align-items:center}.duas-vozes h2{margin-bottom:22px}.duas-vozes p:not(.sobretitulo){color:#625e56;font-size:15px;line-height:1.9;max-width:650px}.dois-simbolos{display:flex;gap:30px;align-items:center;justify-content:center}.dois-simbolos span{display:block;width:95px;height:95px;border-radius:50%;background:#53675A}.dois-simbolos span+span{background:#884C55}
+  .sobre-grade{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:85px}.sobre h2{margin-bottom:25px}.sobre p:not(.sobretitulo){color:#675e56;font-size:15px;line-height:1.85}.perfis{display:grid;grid-template-columns:1fr 1fr;gap:18px}.perfil{min-height:235px;border-radius:3px;display:flex;flex-direction:column;justify-content:end;padding:24px;color:white;gap:5px}.perfil-verde{background:#53675A}.perfil-vinho{background:#884C55}.avatar-placeholder{font-family:'Playfair Display',serif;font-size:45px;opacity:.4;flex:1}.perfil strong{font-family:'Playfair Display',serif;font-size:20px;font-weight:500}.perfil small{font-size:12px;opacity:.75}
+  .rodape{border-top:1px solid #dfd6c8;padding:31px 0}.rodape-conteudo{display:flex;align-items:center;justify-content:space-between;gap:20px}.rodape strong{font-family:'Playfair Display',serif;font-size:21px;font-weight:500}.rodape span{font-size:12px;color:#80756d}
+  @media(max-width:850px){.topo{flex-direction:column;padding:15px 0;gap:12px}.navegacao{gap:18px;flex-wrap:wrap;justify-content:center}.hero{grid-template-columns:1fr;padding-top:65px;gap:20px;text-align:center}.hero-descricao{margin-left:auto;margin-right:auto}.hero-arte{min-height:220px}.livro-hero{max-width:330px}.duas-vozes-grid{grid-template-columns:1fr;gap:35px;text-align:center}.duas-vozes p:not(.sobretitulo){margin-left:auto;margin-right:auto}.sobre-grade{grid-template-columns:1fr;gap:35px}}
+  /* Cada ponto de parada representa um grupo inteiro: 3 desktop, 2 tablet, 1 mobile. */
+  @media(min-width:851px){
+    .grade-livros>.card-livro{scroll-snap-align:none;scroll-snap-stop:normal}
+    .grade-livros>.card-livro:nth-child(3n+1){scroll-snap-align:start;scroll-snap-stop:always}
+  }
+  @media(max-width:850px) and (min-width:611px){
+    .grade-livros>.card-livro{flex-basis:calc((100% - 26px)/2);scroll-snap-align:none;scroll-snap-stop:normal}
+    .grade-livros>.card-livro:nth-child(2n+1){scroll-snap-align:start;scroll-snap-stop:always}
+  }
+  @media(max-width:610px){.container{width:min(100% - 32px,1120px)}.navegacao{font-size:11px;gap:12px}.hero{min-height:0;padding-top:65px;padding-bottom:55px}.hero-arte{min-height:250px}.hero-descricao{font-size:14px}.secao{padding:60px 0}.secao-cabecalho{align-items:start;flex-direction:column}.grade-livros>.card-livro{flex-basis:100%}.capa{height:255px}.duas-vozes-grid{gap:24px}.dois-simbolos span{width:72px;height:72px}.perfis{gap:10px}.perfil{padding:16px;min-height:205px}.rodape-conteudo{flex-direction:column;text-align:center}.sobretitulo{font-size:10px;letter-spacing:1.4px}}
+</style>
+
+<style> .foto-perfil{width:98px;height:98px;object-fit:cover;object-position:center;border-radius:50%;border:3px solid #f5f0e8;margin:0 auto 13px;display:block}.perfil{transition:transform .2s ease}.perfil:hover{transform:translateY(-4px)} </style>
+
+<style>
+  /* Cursor literário: pisca de forma suave, sem bloquear o título. */
+  .cursor-titulo{display:inline-block;width:.085em;height:.85em;margin-left:.12em;vertical-align:-.08em;background:#884C55;animation:cursor-literario 1.15s steps(1,end) infinite}
+  @keyframes cursor-literario{0%,49%{opacity:1}50%,100%{opacity:0}}
+  @media(prefers-reduced-motion:reduce){.cursor-titulo{animation:none;opacity:0}}
+</style>
+
+<script>
+  const trilho = document.querySelector<HTMLElement>('#carrossel-leituras');
+  const anterior = document.querySelector<HTMLButtonElement>('[data-direcao="anterior"]');
+  const proxima = document.querySelector<HTMLButtonElement>('[data-direcao="proxima"]');
+  const contador = document.querySelector<HTMLElement>('#carrossel-contador');
+  const areaBolinhas = document.querySelector<HTMLElement>('#carrossel-bolinhas');
+
+  if (trilho && anterior && proxima && contador && areaBolinhas) {
+    const cartoes = Array.from(trilho.querySelectorAll<HTMLElement>('.card-livro'));
+    let paginaAtual = 0;
+    let paginas = 0;
+    let redimensionamentoAnterior = 0;
+    let rolagemPendente = false;
+    const movimentoReduzido = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const porPagina = () => window.matchMedia('(max-width: 610px)').matches ? 1 :
+      window.matchMedia('(max-width: 850px)').matches ? 2 : 3;
+    const quantidadePaginas = () => Math.ceil(cartoes.length / porPagina());
+    const deslocamentoInicial = (pagina: number) => {
+      const indice = Math.min(cartoes.length - 1, pagina * porPagina());
+      return Math.max(0, cartoes[indice].offsetLeft - cartoes[0].offsetLeft);
+    };
+    const atualizarInterface = () => {
+      anterior.disabled = paginas === 0 || paginaAtual === 0;
+      proxima.disabled = paginas === 0 || paginaAtual >= paginas - 1;
+      contador.textContent = paginas ? `${paginaAtual + 1} de ${paginas}` : 'Nenhuma leitura';
+      Array.from(areaBolinhas.querySelectorAll<HTMLButtonElement>('button')).forEach((bolinha, i) => {
+        const ativa = i === paginaAtual;
+        bolinha.classList.toggle('ativa', ativa);
+        bolinha.setAttribute('aria-current', ativa ? 'true' : 'false');
+      });
+    };
+    const detectarPagina = () => {
+      if (!paginas) return 0;
+      let melhor = 0;
+      let menorDiferenca = Infinity;
+      for (let i = 0; i < paginas; i++) {
+        const diferenca = Math.abs(trilho.scrollLeft - deslocamentoInicial(i));
+        if (diferenca < menorDiferenca) { melhor = i; menorDiferenca = diferenca; }
+      }
+      return melhor;
+    };
+    const atualizarPelaRolagem = () => {
+      if (rolagemPendente) return;
+      rolagemPendente = true;
+      requestAnimationFrame(() => {
+        rolagemPendente = false;
+        paginaAtual = detectarPagina();
+        atualizarInterface();
+      });
+    };
+    const irParaPagina = (pagina: number, suave = true) => {
+      if (!paginas) return;
+      paginaAtual = Math.max(0, Math.min(paginas - 1, pagina));
+      atualizarInterface();
+      trilho.scrollTo({left: deslocamentoInicial(paginaAtual), behavior: suave && !movimentoReduzido() ? 'smooth' : 'auto'});
+    };
+    const configurarPaginas = () => {
+      const quantidade = quantidadePaginas();
+      const mudouQuantidade = quantidade !== paginas;
+      paginas = quantidade;
+      if (mudouQuantidade) {
+        areaBolinhas.replaceChildren();
+        for (let i = 0; i < paginas; i++) {
+          const bolinha = document.createElement('button');
+          bolinha.type = 'button';
+          bolinha.className = 'carrossel-bolinha';
+          bolinha.setAttribute('aria-label', `Ir para página ${i + 1} de ${paginas}`);
+          bolinha.addEventListener('click', () => irParaPagina(i));
+          areaBolinhas.appendChild(bolinha);
+        }
+      }
+      paginaAtual = Math.min(paginaAtual, Math.max(0, paginas - 1));
+      atualizarInterface();
+    };
+    anterior.addEventListener('click', () => irParaPagina(paginaAtual - 1));
+    proxima.addEventListener('click', () => irParaPagina(paginaAtual + 1));
+    trilho.addEventListener('scroll', atualizarPelaRolagem, {passive: true});
+    window.addEventListener('resize', () => {
+      const atual = porPagina();
+      if (atual !== redimensionamentoAnterior) {
+        redimensionamentoAnterior = atual;
+        configurarPaginas();
+        requestAnimationFrame(() => irParaPagina(paginaAtual, false));
+      } else {
+        atualizarPelaRolagem();
+      }
+    });
+    redimensionamentoAnterior = porPagina();
+    configurarPaginas();
+  }
+</script>
+
+<style is:global>
+.carrossel-bolinhas{display:flex;justify-content:center;gap:8px;margin:8px 0 18px;flex-wrap:wrap}
+.carrossel-bolinha{appearance:none;border:0;background:transparent;width:24px;height:28px;border-radius:50%;padding:0;cursor:pointer;display:grid;place-items:center}.carrossel-bolinha::before{content:"";display:block;background:#d4c6b7;width:9px;height:9px;border-radius:50%;transition:background .2s,transform .2s}
+.carrossel-bolinha.ativa::before{background:#884C55;transform:scale(1.25)}
+.carrossel-bolinha[hidden]{display:none!important}
+.carrossel-bolinha:focus-visible{outline:2px solid #884C55;outline-offset:4px}
+</style>

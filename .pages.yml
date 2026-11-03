@@ -1,0 +1,140 @@
+# Dois Pontos de Vista — Painel editorial (Pages CMS)
+# Os campos devem manter exatamente estes nomes, pois o Astro os utiliza.
+media:
+  input: public/imagens/livros
+  output: /imagens/livros
+  rename: safe
+  categories: [image]
+
+content:
+  - name: livros
+    label: Livros
+    type: collection
+    path: src/content/livros
+    format: yaml-frontmatter
+    filename:
+      template: "{primary}.md"
+      field: create
+    view:
+      primary: titulo
+      fields: [titulo, autor, genero, publicado]
+      search: [titulo, autor]
+    operations:
+      rename: false
+      delete: false
+    fields:
+      - name: titulo
+        label: Título da obra
+        type: string
+        required: true
+      - name: autor
+        label: Autor do livro
+        type: string
+        required: true
+      - name: genero
+        label: Gênero literário
+        type: string
+        required: true
+      - name: ano
+        label: Ano de publicação da obra
+        type: number
+        required: true
+      - name: sinopse
+        label: Sinopse (sem spoilers)
+        type: text
+        required: true
+      - name: capa
+        label: Imagem da capa
+        type: image
+        description: "Escolha ou envie uma capa. Pode manter a URL externa existente."
+      - name: cor
+        label: Cor alternativa para capa não disponível
+        type: string
+        default: "#53675A"
+      - name: iniciais
+        label: Iniciais para capa alternativa
+        type: string
+      - name: publicado
+        label: Livro liberado para publicação
+        type: boolean
+        default: false
+      - name: demonstrativo
+        label: Conteúdo demonstrativo
+        type: boolean
+        default: false
+
+  - name: opinioes
+    label: Opiniões e avaliações
+    type: collection
+    path: src/content/opinioes
+    format: yaml-frontmatter
+    filename:
+      template: "{livro}-{pessoa}.md"
+      field: create
+    view:
+      primary: titulo
+      fields: [titulo, livro, pessoa, dataPublicacao, publicado]
+      search: [titulo, livro]
+    operations:
+      rename: false
+      delete: false
+    fields:
+      - name: livro
+        label: Livro associado
+        type: reference
+        required: true
+        options:
+          collection: livros
+          value: "{name}"
+          label: "{titulo}"
+          search: "titulo,autor"
+        description: "Cadastre o livro primeiro, depois selecione-o aqui."
+      - name: pessoa
+        label: Quem escreveu a opinião
+        type: select
+        required: true
+        options:
+          values:
+            - name: ele
+              label: Luiz Anselmo
+            - name: ela
+              label: Heloísa Marques
+      - name: titulo
+        label: Título da opinião
+        type: string
+        required: true
+      - name: nota
+        label: Nota (de 0 a 5, admite decimal)
+        type: number
+        description: "Opcional. Exemplo: 4.5"
+      - name: dataLeitura
+        label: Data de conclusão da leitura
+        type: date
+        required: true
+        options:
+          format: yyyy-MM-dd
+      - name: dataPublicacao
+        label: Data de publicação da opinião
+        type: date
+        required: true
+        options:
+          format: yyyy-MM-dd
+      - name: resumo
+        label: Resumo da opinião
+        type: text
+        required: true
+      - name: publicado
+        label: Publicar opinião no site
+        type: boolean
+        default: false
+      - name: demonstrativo
+        label: Conteúdo demonstrativo
+        type: boolean
+        default: false
+      - name: body
+        label: Texto completo com imagens
+        type: rich-text
+        options:
+          format: markdown
+          switcher: true
+          rename: safe

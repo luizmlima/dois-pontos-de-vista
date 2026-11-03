@@ -1,0 +1,135 @@
+---
+import '../styles/mobile-polish.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Encerramento from '../components/Encerramento.astro';
+import { livros } from '../data/livros';
+---
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Explore todos os livros e opiniões do Dois Pontos de Vista: leituras dele, dela e dos dois." />
+    <title>Nossa Estante — Dois Pontos de Vista</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <Header />
+
+    <main id="conteudo-principal">
+      <section class="apresentacao container">
+        <div class="rotulo"><span class="traco"></span> NOSSA BIBLIOTECA COMPARTILHADA</div>
+        <h1>Uma estante, <em>dois olhares.</em></h1>
+        <p>Livros que nos acompanharam, nos surpreenderam ou nos fizeram discordar. Cada história guarda uma perspectiva — algumas, duas.</p>
+        <div class="numeros"><span><strong>{livros.length}</strong> livros na estante</span><span class="separador"></span><span><strong>{livros.filter(l => l.leitores.length === 2).length}</strong> leituras a dois</span></div>
+      </section>
+
+      <section class="biblioteca container" aria-label="Catálogo de livros">
+        <div class="ferramentas">
+          <div class="busca"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.7" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m16 16 5 5" stroke="currentColor" stroke-width="1.8"/></svg><input id="pesquisa" type="search" placeholder="Busque um livro ou autor..." aria-label="Buscar por título ou autor" /></div>
+          <label class="ordenacao">Ordenar por <select id="ordem"><option value="titulo">Título (A–Z)</option><option value="autor">Autor (A–Z)</option><option value="ano">Ano de publicação</option></select></label>
+        </div>
+        <div class="filtros" role="group" aria-label="Filtrar por quem leu">
+          <button type="button" class="filtro ativo" data-filtro="todos" aria-pressed="true">Todos os livros</button>
+          <button type="button" class="filtro" data-filtro="ele" aria-pressed="false">Lidos por ele</button>
+          <button type="button" class="filtro" data-filtro="ela" aria-pressed="false">Lidos por ela</button>
+          <button type="button" class="filtro" data-filtro="ambos" aria-pressed="false">Leituras a dois <span class="mini-pontos">● ●</span></button>
+        </div>
+        <div class="subbarra"><p id="contagem" aria-live="polite">Exibindo {livros.length} livros</p><p class="nota">Livros marcados como demonstração serão substituídos pelos textos reais.</p></div>
+        <div class="grade" id="grade">
+          {livros.map((livro) => (
+            <article class="cartao" data-titulo={livro.titulo} data-autor={livro.autor} data-genero={livro.genero} data-leitores={livro.leitores.join(',')} data-ano={livro.ano}>
+              <a class="capa" href={`/livros/${livro.id}?origem=estante`} style={`--cor-capa:${livro.cor}`} aria-label={`Representação ilustrativa da capa de ${livro.titulo}`}>
+                {livro.capa && <img class="capa-imagem" src={livro.capa} alt="" loading="lazy" onerror="this.remove()" onload="if(this.naturalWidth < 50) this.remove()" />}<span class="capa-detalhe">DOIS PONTOS DE VISTA</span><strong>{livro.titulo}</strong><span class="capa-autor">{livro.autor}</span>
+              </a>
+              <div class="cartao-info">
+                <span class:list={['etiqueta', livro.leitores.length === 2 ? 'dupla' : 'individual']}>
+                  {livro.leitores.length === 2 ? '● ●  Leitura a dois' : livro.leitores[0] === 'ele' ? '●  Leitura dele' : '●  Leitura dela'}
+                </span>
+                <h2><a href={`/livros/${livro.id}?origem=estante`}>{livro.titulo}</a></h2><p class="autor">{livro.autor}</p>
+                <div class="avaliacoes">
+                  {livro.notaEle !== null && <span><span class="ponto-verde">●</span> Ele <strong>{livro.notaEle.toFixed(1).replace('.', ',')}/5</strong></span>}
+                  {livro.notaEla !== null && <span><span class="ponto-vinho">●</span> Ela <strong>{livro.notaEla.toFixed(1).replace('.', ',')}/5</strong></span>}
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+        <div class="vazio" id="vazio" hidden><h2>Nenhum livro encontrado.</h2><p>Experimente outra busca ou escolha outro filtro.</p><button type="button" id="limpar">Limpar filtros</button></div>
+      </section>
+      <Encerramento titulo="Cada livro acrescenta uma nova história à nossa." rotulo="UM ACERVO EM CONSTRUÇÃO" descricao="Nossa estante cresce com o tempo. Quando os dois escrevemos sobre uma mesma obra, ela ganha naturalmente um segundo ponto de vista." principal={{ texto: 'Explorar Leituras a Dois', href: '/leituras-a-dois' }} secundaria={{ texto: 'Voltar ao início', href: '/' }} />
+    </main>
+    <Footer />
+
+    <script>
+      const pesquisa = document.querySelector<HTMLInputElement>('#pesquisa');
+      const ordem = document.querySelector<HTMLSelectElement>('#ordem');
+      const grade = document.querySelector<HTMLElement>('#grade');
+      const contagem = document.querySelector<HTMLElement>('#contagem');
+      const vazio = document.querySelector<HTMLElement>('#vazio');
+      const filtros = Array.from(document.querySelectorAll<HTMLButtonElement>('.filtro'));
+      const cartoes = Array.from(document.querySelectorAll<HTMLElement>('.cartao'));
+      let filtroAtual = new URLSearchParams(window.location.search).get('leitura') || 'todos';
+      if (!['todos','ele','ela','ambos'].includes(filtroAtual)) filtroAtual = 'todos';
+      const normalizar = (s: string) => s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+      function atualizar() {
+        const busca = normalizar(pesquisa?.value.trim() || '');
+        filtros.forEach(botao => { const ativo = botao.dataset.filtro === filtroAtual; botao.classList.toggle('ativo',ativo); botao.setAttribute('aria-pressed',String(ativo)); });
+        const exibidos = cartoes.filter(cartao => {
+          const leitores = (cartao.dataset.leitores || '').split(',');
+          const combinaFiltro = filtroAtual === 'todos' || (filtroAtual === 'ambos' ? leitores.length === 2 : leitores.includes(filtroAtual));
+          const combinaBusca = normalizar(`${cartao.dataset.titulo} ${cartao.dataset.autor}`).includes(busca);
+          const mostrar = combinaFiltro && combinaBusca; cartao.hidden = !mostrar; return mostrar;
+        });
+        const campo = ordem?.value || 'titulo';
+        exibidos.sort((a,b) => campo === 'ano' ? Number(b.dataset.ano)-Number(a.dataset.ano) : (a.dataset[campo as 'titulo'|'autor'] || '').localeCompare(b.dataset[campo as 'titulo'|'autor'] || '', 'pt-BR'));
+        exibidos.forEach(cartao => grade?.appendChild(cartao));
+        if (contagem) contagem.textContent = `Exibindo ${exibidos.length} ${exibidos.length === 1 ? 'livro' : 'livros'}`;
+        if (vazio) vazio.hidden = exibidos.length !== 0;
+      }
+      filtros.forEach(botao => botao.addEventListener('click', () => {
+        filtroAtual = botao.dataset.filtro || 'todos';
+        const url = new URL(window.location.href);
+        if (filtroAtual === 'todos') url.searchParams.delete('leitura'); else url.searchParams.set('leitura', filtroAtual);
+        history.replaceState(null,'',url);
+        atualizar();
+      }));
+      pesquisa?.addEventListener('input', atualizar);
+      ordem?.addEventListener('change', atualizar);
+      document.querySelector('#limpar')?.addEventListener('click', () => { if (pesquisa) pesquisa.value = ''; filtroAtual = 'todos'; history.replaceState(null,'',window.location.pathname); atualizar(); pesquisa?.focus(); });
+      atualizar();
+    </script>
+  </body>
+</html>
+
+<style>
+  :global(*){box-sizing:border-box}
+  :global(html){scroll-behavior:smooth}
+  :global(body){margin:0;background:#F5F0E8;color:#312E2B;font-family:'DM Sans',sans-serif;-webkit-font-smoothing:antialiased}
+  :global(a){color:inherit;text-decoration:none}
+  :global(button),:global(input),:global(select){font:inherit}
+  .container{width:min(1120px,calc(100% - 48px));margin-inline:auto}
+  .cabecalho{border-bottom:1px solid #ddd2c1;background:#F5F0E8}
+  .topo{min-height:98px;display:flex;align-items:center;justify-content:space-between;gap:25px}
+  .marca{display:flex;align-items:center;gap:10px;color:#312E2B;font-family:'Playfair Display',serif;font-size:26px;line-height:1.03;font-weight:600;white-space:nowrap}
+  .marca small{display:block;font-size:20px;line-height:1.1}.marca-simbolo{width:58px;height:48px}
+  .navegacao{display:flex;align-items:center;gap:34px;font-size:13px;font-weight:600}.navegacao a{padding:10px 0}.navegacao a:hover,.navegacao .ativo{color:#884C55}
+  .apresentacao{padding:92px 0 57px;text-align:center}.rotulo{font-size:11px;font-weight:700;letter-spacing:2.7px;color:#884C55}.traco{display:inline-block;vertical-align:middle;width:26px;height:1px;background:#884C55;margin-right:12px}
+  h1,h2,p{margin-top:0}.apresentacao h1{font:500 clamp(42px,5.6vw,72px)/1.16 'Playfair Display',serif;letter-spacing:-1.8px;margin:22px 0}.apresentacao h1 em{color:#884C55}.apresentacao p{color:#776F67;max-width:610px;margin:0 auto;font-size:16px;line-height:1.9}
+  .numeros{margin-top:38px;display:flex;gap:23px;align-items:center;justify-content:center;color:#776F67;font-size:13px}.numeros strong{font-family:'Playfair Display',serif;font-size:25px;font-weight:500;color:#312E2B;margin-right:5px}.separador{height:24px;width:1px;background:#d7cabb}
+  .biblioteca{padding:16px 0 106px}.ferramentas{display:flex;gap:16px;justify-content:space-between}.busca{display:flex;align-items:center;gap:12px;background:#fffaf2;border:1px solid #ded4c6;border-radius:8px;padding:0 17px;flex:1;max-width:620px;color:#857c70}.busca input{border:0;outline:0;background:transparent;width:100%;height:52px;color:#312E2B;font-size:14px}.busca:focus-within{outline:2px solid #884C55;outline-offset:2px}.ordenacao{background:#fffaf2;border:1px solid #ded4c6;border-radius:8px;padding:0 14px;display:flex;align-items:center;gap:12px;white-space:nowrap;font-size:12px;color:#777067}.ordenacao select{border:0;background:transparent;outline:none;color:#312E2B;font-size:13px;cursor:pointer}
+  .filtros{display:flex;flex-wrap:wrap;gap:10px;margin:26px 0 32px}.filtro{border:1px solid #d7cabb;background:transparent;color:#5f574f;border-radius:50px;padding:11px 18px;cursor:pointer;font-size:13px;font-weight:600;transition:background .2s,color .2s}.filtro:hover{border-color:#884C55}.filtro.ativo{background:#312E2B;border-color:#312E2B;color:#fff8ec}.mini-pontos{color:#b67a7d;margin-left:4px;font-size:9px;letter-spacing:2px}
+  .subbarra{display:flex;justify-content:space-between;align-items:center;gap:15px;border-top:1px solid #ddd2c1;padding:19px 0 26px}.subbarra p{margin:0;font-size:12px;color:#766d63}.subbarra .nota{font-size:11px}
+  .grade{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:33px;row-gap:54px}.cartao{min-width:0}.cartao .capa{color:#fdf7ec;text-decoration:none}.cartao .capa:hover{filter:brightness(1.08)}.cartao-info h2 a:hover{color:#884C55}.cartao[hidden],.vazio[hidden]{display:none!important}.capa{aspect-ratio:4/4.5;background:var(--cor-capa);border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;color:#fdf7ec;padding:30px;text-align:center;box-shadow:9px 13px 0 #e5dbcf,0 12px 30px #312e2b16;position:relative;overflow:hidden}.capa::before{content:'';position:absolute;inset:16px;border:1px solid #ffffff65;pointer-events:none}.capa-detalhe{position:relative;font-size:9px;letter-spacing:3px;opacity:.8}.capa strong{position:relative;font:500 clamp(22px,2.6vw,35px)/1.25 'Playfair Display',serif;text-wrap:balance}.capa-autor{position:relative;font-size:11px;letter-spacing:1px;opacity:.85}
+  .cartao-info{padding:25px 1px 0}.etiqueta{font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:#53675A}.etiqueta.dupla{color:#884C55}.cartao-info h2{font:500 24px/1.3 'Playfair Display',serif;margin:11px 0 6px}.autor{color:#82786e;font-size:13px;margin:0 0 17px}.avaliacoes{display:flex;gap:15px;flex-wrap:wrap;font-size:12px;color:#71685f;border-top:1px solid #ded4c6;padding-top:13px}.avaliacoes strong{color:#312E2B;margin-left:4px}.ponto-verde{color:#53675A}.ponto-vinho{color:#884C55}
+  .vazio{text-align:center;padding:75px 20px;border:1px dashed #cdbfac;border-radius:12px}.vazio h2{font:500 28px 'Playfair Display',serif}.vazio p{color:#82786e}.vazio button{border:0;background:#884C55;color:white;border-radius:5px;padding:12px 20px;cursor:pointer}
+  .encerramento{background:#eae3d8;text-align:center;padding:78px 0 84px}.encerramento .container{max-width:650px}.encerramento h2{font:500 clamp(29px,4vw,45px)/1.25 'Playfair Display',serif;margin:18px 0}.encerramento p{font-size:14px;line-height:1.9;color:#776e63}.encerramento a{display:inline-block;margin-top:14px;border-bottom:1px solid #884C55;padding-bottom:6px;color:#884C55;font-weight:700;font-size:13px}
+  .rodape{padding:32px 0;background:#312E2B;color:#f5f0e8}.rodape-conteudo{display:flex;align-items:center;justify-content:space-between;gap:20px}.rodape-conteudo>span{font:500 19px 'Playfair Display',serif}.rodape small{font-size:11px;letter-spacing:1px;color:#cbbfb3}.vinho{color:#cb8f96}
+  @media(max-width:850px){.topo{flex-direction:column;padding:15px 0;gap:12px}.navegacao{gap:18px;flex-wrap:wrap;justify-content:center}.grade{grid-template-columns:repeat(2,minmax(0,1fr))}.capa strong{font-size:30px}}
+  @media(max-width:610px){.container{width:calc(100% - 32px)}.navegacao{font-size:11px;gap:12px}.apresentacao{padding:62px 0 40px}.apresentacao h1{letter-spacing:-1px}.apresentacao p{font-size:14px}.numeros{gap:14px}.ferramentas{flex-direction:column}.busca{max-width:none}.ordenacao{min-height:48px;justify-content:space-between}.filtros{gap:8px}.filtro{font-size:11px;padding:10px 12px}.subbarra{flex-direction:column;align-items:flex-start;gap:5px}.grade{grid-template-columns:repeat(2,minmax(0,1fr));gap:35px 17px}.capa{padding:16px;gap:12px;box-shadow:5px 7px 0 #e5dbcf}.capa::before{inset:10px}.capa strong{font-size:clamp(17px,4.3vw,25px)}.capa-detalhe{font-size:7px;letter-spacing:1.3px}.capa-autor{font-size:9px}.cartao-info{padding-top:18px}.cartao-info h2{font-size:19px}.avaliacoes{gap:6px;font-size:11px}.encerramento{padding:60px 0}.rodape-conteudo{flex-direction:column;text-align:center}}
+  @media(max-width:360px){.grade{grid-template-columns:1fr}.capa{aspect-ratio:4/3}.capa strong{font-size:30px}}
+</style>
