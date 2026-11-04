@@ -10,6 +10,8 @@
 
 ---
 
+## [Link para o site](https://dois-pontos-de-vista.pages.dev/)
+
 ## Sobre o projeto
 
 O **Dois Pontos de Vista** nasceu da vontade de registrar o que os livros despertam em cada um de nós. Não precisamos ler juntos, concordar ou dar a mesma nota: cada opinião tem seu próprio espaço.
