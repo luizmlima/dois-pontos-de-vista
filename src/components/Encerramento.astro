@@ -1,4 +1,5 @@
 ---
+import g from '../data/editorial/geral.json';
 interface Acao { texto: string; href: string; contexto?: 'preservar' | 'origem' }
 interface Props {
   rotulo?: string;
@@ -9,13 +10,13 @@ interface Props {
   terciaria?: Acao;
   compacto?: boolean;
 }
-const { rotulo = 'CONTINUE EXPLORANDO', titulo, descricao, principal, secundaria, terciaria, compacto = false } = Astro.props;
+const { rotulo = g.rotuloEncerramento, titulo, descricao, principal, secundaria, terciaria, compacto = false } = Astro.props;
 const contexto = (acao: Acao) => ({
   'data-preservar-origem': acao.contexto === 'preservar' ? '' : undefined,
   'data-voltar-origem': acao.contexto === 'origem' ? '' : undefined,
 });
 ---
-<section class:list={['encerramento-padrao', { compacto }]} aria-label="Continue explorando">
+<section class:list={['encerramento-padrao', { compacto }]} aria-label={g.ariaEncerramento}>
   <div class="encerramento-conteudo">
     <p class="rotulo-padrao">{rotulo}</p>
     <h2>{titulo}</h2>

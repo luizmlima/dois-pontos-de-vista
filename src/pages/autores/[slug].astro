@@ -3,18 +3,23 @@ import '../../styles/mobile-polish.css';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import { livros } from '../../data/livros';
+import luiz from '../../data/editorial/luiz.json';
+import heloisa from '../../data/editorial/heloisa.json';
+import t from '../../data/editorial/perfil.json';
+import g from '../../data/editorial/geral.json';
 
 const pessoas = [
- { slug: 'luiz-anselmo', nome: 'Luiz Anselmo', pessoa: 'ele', titulo: 'O olhar dele', foto: '/imagens/luiz-anselmo.jpg', cor:'#53675A', descricao:'Um espaço para minhas leituras, avaliações e reflexões. Em breve, esta página contará mais sobre minha história com os livros.' },
- { slug: 'heloisa-marques', nome: 'Heloísa Marques', pessoa: 'ela', titulo: 'O olhar dela', foto: '/imagens/heloisa-marques.jpg', cor:'#884C55', descricao:'Um espaço para minhas leituras, avaliações e reflexões. Em breve, esta página contará mais sobre minha história com os livros.' },
+ { slug: 'luiz-anselmo', pessoa: 'ele', foto: '/imagens/luiz-anselmo.jpg', cor:'#53675A', ...luiz },
+ { slug: 'heloisa-marques', pessoa: 'ela', foto: '/imagens/heloisa-marques.jpg', cor:'#884C55', ...heloisa },
 ] as const;
 export function getStaticPaths() {
-  // Astro executa getStaticPaths em um escopo isolado: os dados precisam estar dentro da função.
+  // Caminhos fixos; nomes, frases e biografias são gerenciados pelo CMS.
+  // Esta lista precisa ser declarada dentro de getStaticPaths no build do Astro.
   const perfis = [
-    { slug: 'luiz-anselmo', nome: 'Luiz Anselmo', pessoa: 'ele', titulo: 'O olhar dele', foto: '/imagens/luiz-anselmo.jpg', cor: '#53675A', descricao: 'Um espaço para minhas leituras, avaliações e reflexões. Em breve, esta página contará mais sobre minha história com os livros.' },
-    { slug: 'heloisa-marques', nome: 'Heloísa Marques', pessoa: 'ela', titulo: 'O olhar dela', foto: '/imagens/heloisa-marques.jpg', cor: '#884C55', descricao: 'Um espaço para minhas leituras, avaliações e reflexões. Em breve, esta página contará mais sobre minha história com os livros.' },
+    { slug: 'luiz-anselmo', pessoa: 'ele', foto: '/imagens/luiz-anselmo.jpg', cor: '#53675A', ...luiz },
+    { slug: 'heloisa-marques', pessoa: 'ela', foto: '/imagens/heloisa-marques.jpg', cor: '#884C55', ...heloisa }
   ];
-  return perfis.map(p => ({ params: { slug: p.slug }, props: { perfil: p } }));
+  return perfis.map(perfil => ({ params: { slug: perfil.slug }, props: { perfil } }));
 }
 const { perfil } = Astro.props;
 const meusLivros = livros.filter(l=>l.leitores.includes(perfil.pessoa));
@@ -26,10 +31,11 @@ const outro = pessoas.find(p=>p.slug!==perfil.slug)!;
 <!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8"/><link rel="icon" type="image/png" href="/favicon.png" />
+<meta charset="UTF-8"/><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2" />
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<meta name="description" content={`Conheça ${perfil.nome} e suas leituras no Dois Pontos de Vista.`}/>
-<title>{perfil.nome} — Dois Pontos de Vista</title>
+<meta name="description" content={`Conheça ${perfil.nome} e suas leituras no ${g.tituloSite}.`}/>
+<title>{perfil.nome} — {g.tituloSite}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -39,15 +45,15 @@ const outro = pessoas.find(p=>p.slug!==perfil.slug)!;
 <main id="conteudo-principal">
 <section class="hero container">
 <div class="retrato"><img src={perfil.foto} alt={`Retrato de ${perfil.nome}`} width="640" height="640" loading="eager"/></div>
-<div class="apresentacao"><p class="rotulo">{perfil.titulo.toUpperCase()}</p><h1>{perfil.nome}</h1><div class="frase">“Cada livro deixa uma história — e também uma forma diferente de enxergá-la.”</div><p class="texto">{perfil.descricao}</p><a class="link" href="#minhas-leituras">Conheça minhas leituras <span aria-hidden="true">↘</span></a></div>
+<div class="apresentacao"><p class="rotulo">{perfil.titulo.toUpperCase()}</p><h1>{perfil.nome}</h1><div class="frase">“{perfil.frase}”</div><p class="texto">{perfil.descricao}</p><a class="link" href="#minhas-leituras">{t.linkLeituras} <span aria-hidden="true">↘</span></a></div>
 </section>
-<section class="numeros"><div class="container estatisticas"><div><strong>{meusLivros.length}</strong><span>livros na estante</span></div><div><strong>{media}</strong><span>nota média / 5</span></div><div><strong>{duplas}</strong><span>leituras a dois</span></div></div></section>
-<section class="container historia"><div><p class="rotulo">ENTRE PÁGINAS</p><h2>Minha história <em>com os livros</em></h2></div><div><p>Esta biografia será escrita por {perfil.nome}. Aqui entrarão lembranças, gêneros favoritos, autores marcantes e o que a leitura representa em sua vida.</p><p>O texto definitivo poderá ser longo ou curto, e as fotos também poderão ser atualizadas quando construirmos o sistema de publicação.</p><span class="aviso">Texto provisório — não é uma biografia real.</span></div></section>
-<section id="minhas-leituras" class="leituras"><div class="container"><div class="cabeca-secao"><div><p class="rotulo">REGISTROS DE LEITURA</p><h2>Minha estante e <em>avaliações</em></h2><p>Livros com opiniões de {perfil.nome}. Clique para conhecer cada obra ou ler o texto completo.</p></div><a href="/estante">Biblioteca completa ↗</a></div>
+<section class="numeros"><div class="container estatisticas"><div><strong>{meusLivros.length}</strong><span>{t.estatLivros}</span></div><div><strong>{media}</strong><span>{t.estatMedia}</span></div><div><strong>{duplas}</strong><span>{t.estatDuplas}</span></div></div></section>
+<section class="container historia"><div><p class="rotulo">{t.rotuloHistoria}</p><h2>{t.tituloHistoria1} <em>{t.tituloHistoria2}</em></h2></div><div>{perfil.biografia.split(/\n\s*\n/).filter(Boolean).map(paragrafo => <p>{paragrafo}</p>)}</div></section>
+<section id="minhas-leituras" class="leituras"><div class="container"><div class="cabeca-secao"><div><p class="rotulo">{t.rotuloLeituras}</p><h2>{t.tituloLeituras1} <em>{t.tituloLeituras2}</em></h2><p>{t.descricaoLeiturasAntes} {perfil.nome}. {t.descricaoLeiturasDepois}</p></div><a href="/estante">{t.linkEstante} ↗</a></div>
 <div class="grade">
-{meusLivros.map(l=><article class="livro"><a href={`/livros/${l.id}`} class="capa" style={`--capa:${l.cor}`} aria-label={`Ver ${l.titulo}`}>{l.capa && <img class="capa-imagem" src={l.capa} alt="" loading="lazy" onerror="this.remove()" onload="if(this.naturalWidth < 50) this.remove()" />}<span>DOIS PONTOS DE VISTA</span><strong>{l.titulo}</strong><small>{l.autor}</small></a><div class="livro-info"><p class="categoria">{l.genero} {l.leitores.length===2?'· LEITURA A DOIS':''}</p><h3><a href={`/livros/${l.id}`}>{l.titulo}</a></h3><p class="autor">{l.autor}</p><p class="nota">Minha avaliação: <b>{(perfil.pessoa==='ele'? l.notaEle : l.notaEla)?.toFixed(1).replace('.',',') ?? '—'}{(perfil.pessoa==='ele'? l.notaEle : l.notaEla) === null ? '' : '/5'}</b></p><a class="link-opiniao" href={`/livros/${l.id}/${perfil.pessoa}`}>Ler minha opinião ↗</a></div></article>)}
-</div><p class="aviso">Livros, notas e opiniões são demonstrações; serão substituídos pelas publicações de vocês.</p></div></section>
-<section class="outro"><div class="container outro-conteudo"><p class="rotulo">OUTRA PERSPECTIVA</p><h2>Uma estante, <em>dois olhares.</em></h2><p>Descubra também as leituras e opiniões de {outro.nome}.</p><a href={`/autores/${outro.slug}`}><img src={outro.foto} alt="" width="52" height="52"/>Conhecer {outro.nome} ↗</a></div></section>
+{meusLivros.map(l=><article class="livro"><a href={`/livros/${l.id}`} class="capa" style={`--capa:${l.cor}`} aria-label={`${g.ariaVerLivro} ${l.titulo}`}>{l.capa && <img class="capa-imagem" src={l.capa} alt="" loading="lazy" onerror="this.remove()" onload="if(this.naturalWidth < 50) this.remove()" />}<span>{g.rotuloCapa}</span><strong>{l.titulo}</strong><small>{l.autor}</small></a><div class="livro-info"><p class="categoria">{l.genero} {l.leitores.length===2?`· ${g.leituraDupla.toUpperCase()}`:''}</p><h3><a href={`/livros/${l.id}`}>{l.titulo}</a></h3><p class="autor">{l.autor}</p><p class="nota">{t.minhaAvaliacao} <b>{(perfil.pessoa==='ele'? l.notaEle : l.notaEla)?.toFixed(1).replace('.',',') ?? '—'}{(perfil.pessoa==='ele'? l.notaEle : l.notaEla) === null ? '' : '/5'}</b></p><a class="link-opiniao" href={`/livros/${l.id}/${perfil.pessoa}`}>{t.linkOpiniao} ↗</a></div></article>)}
+</div>{meusLivros.length===0 && <p class="aviso">{t.estanteVazia}</p>}</div></section>
+<section class="outro"><div class="container outro-conteudo"><p class="rotulo">{t.rotuloOutro}</p><h2>{t.tituloOutro1} <em>{t.tituloOutro2}</em></h2><p>{t.descricaoOutroAntes} {outro.nome}.</p><a href={`/autores/${outro.slug}`}><img src={outro.foto} alt="" width="52" height="52"/>{t.linkOutro} {outro.nome} ↗</a></div></section>
 </main><Footer />
 </body></html>
 <style>

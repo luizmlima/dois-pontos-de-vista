@@ -1,4 +1,6 @@
 ---
+import t from '../data/editorial/estante.json';
+import g from '../data/editorial/geral.json';
 import '../styles/mobile-polish.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
@@ -9,10 +11,11 @@ import { livros } from '../data/livros';
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Explore todos os livros e opiniões do Dois Pontos de Vista: leituras dele, dela e dos dois." />
-    <title>Nossa Estante — Dois Pontos de Vista</title>
+    <meta name="description" content={t.descricaoMeta} />
+    <title>{t.tituloAba} — {g.tituloSite}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -22,46 +25,50 @@ import { livros } from '../data/livros';
 
     <main id="conteudo-principal">
       <section class="apresentacao container">
-        <div class="rotulo"><span class="traco"></span> NOSSA BIBLIOTECA COMPARTILHADA</div>
-        <h1>Uma estante, <em>dois olhares.</em></h1>
-        <p>Livros que nos acompanharam, nos surpreenderam ou nos fizeram discordar. Cada história guarda uma perspectiva — algumas, duas.</p>
-        <div class="numeros"><span><strong>{livros.length}</strong> livros na estante</span><span class="separador"></span><span><strong>{livros.filter(l => l.leitores.length === 2).length}</strong> leituras a dois</span></div>
+        <div class="rotulo"><span class="traco"></span> {t.rotulo}</div>
+        <h1>{t.titulo1} <em>{t.titulo2}</em></h1>
+        <p>{t.descricao}</p>
+        <div class="numeros"><span><strong>{livros.length}</strong> {t.contadorLivros}</span><span class="separador"></span><span><strong>{livros.filter(l => l.leitores.length === 2).length}</strong> {t.contadorDuplas}</span></div>
       </section>
 
-      <section class="biblioteca container" aria-label="Catálogo de livros">
+      <section class:list={["biblioteca", "container", { "sem-livros": livros.length === 0 }]} aria-label="Catálogo de livros">
         <div class="ferramentas">
-          <div class="busca"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.7" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m16 16 5 5" stroke="currentColor" stroke-width="1.8"/></svg><input id="pesquisa" type="search" placeholder="Busque um livro ou autor..." aria-label="Buscar por título ou autor" /></div>
-          <label class="ordenacao">Ordenar por <select id="ordem"><option value="titulo">Título (A–Z)</option><option value="autor">Autor (A–Z)</option><option value="ano">Ano de publicação</option></select></label>
+          <div class="busca"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.7" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m16 16 5 5" stroke="currentColor" stroke-width="1.8"/></svg><input id="pesquisa" type="search" placeholder={t.busca} aria-label={t.busca} /></div>
+          <label class="ordenacao">{t.ordenarPor} <select id="ordem"><option value="titulo">{t.ordemTitulo}</option><option value="autor">{t.ordemAutor}</option><option value="ano">{t.ordemAno}</option></select></label>
         </div>
         <div class="filtros" role="group" aria-label="Filtrar por quem leu">
-          <button type="button" class="filtro ativo" data-filtro="todos" aria-pressed="true">Todos os livros</button>
-          <button type="button" class="filtro" data-filtro="ele" aria-pressed="false">Lidos por ele</button>
-          <button type="button" class="filtro" data-filtro="ela" aria-pressed="false">Lidos por ela</button>
-          <button type="button" class="filtro" data-filtro="ambos" aria-pressed="false">Leituras a dois <span class="mini-pontos">● ●</span></button>
+          <button type="button" class="filtro ativo" data-filtro="todos" aria-pressed="true">{t.filtroTodos}</button>
+          <button type="button" class="filtro" data-filtro="ele" aria-pressed="false">{t.filtroEle}</button>
+          <button type="button" class="filtro" data-filtro="ela" aria-pressed="false">{t.filtroEla}</button>
+          <button type="button" class="filtro" data-filtro="ambos" aria-pressed="false">{t.filtroDuplo} <span class="mini-pontos">● ●</span></button>
         </div>
-        <div class="subbarra"><p id="contagem" aria-live="polite">Exibindo {livros.length} livros</p><p class="nota">Livros marcados como demonstração serão substituídos pelos textos reais.</p></div>
+        <div class="subbarra"><p id="contagem" aria-live="polite" data-prefixo={t.exibindo} data-singular={t.livroSingular} data-plural={t.livroPlural}>{t.exibindo} {livros.length} {livros.length===1?t.livroSingular:t.livroPlural}</p></div>
         <div class="grade" id="grade">
           {livros.map((livro) => (
             <article class="cartao" data-titulo={livro.titulo} data-autor={livro.autor} data-genero={livro.genero} data-leitores={livro.leitores.join(',')} data-ano={livro.ano}>
-              <a class="capa" href={`/livros/${livro.id}?origem=estante`} style={`--cor-capa:${livro.cor}`} aria-label={`Representação ilustrativa da capa de ${livro.titulo}`}>
-                {livro.capa && <img class="capa-imagem" src={livro.capa} alt="" loading="lazy" onerror="this.remove()" onload="if(this.naturalWidth < 50) this.remove()" />}<span class="capa-detalhe">DOIS PONTOS DE VISTA</span><strong>{livro.titulo}</strong><span class="capa-autor">{livro.autor}</span>
+              <a class="capa" href={`/livros/${livro.id}?origem=estante`} style={`--cor-capa:${livro.cor}`} aria-label={`${g.ariaCapaLivro} ${livro.titulo}`}>
+                {livro.capa && <img class="capa-imagem" src={livro.capa} alt="" loading="lazy" onerror="this.remove()" onload="if(this.naturalWidth < 50) this.remove()" />}<span class="capa-detalhe">{g.rotuloCapa}</span><strong>{livro.titulo}</strong><span class="capa-autor">{livro.autor}</span>
               </a>
               <div class="cartao-info">
                 <span class:list={['etiqueta', livro.leitores.length === 2 ? 'dupla' : 'individual']}>
-                  {livro.leitores.length === 2 ? '● ●  Leitura a dois' : livro.leitores[0] === 'ele' ? '●  Leitura dele' : '●  Leitura dela'}
+                  {livro.leitores.length === 2 ? `● ● ${g.leituraDupla}` : livro.leitores[0] === 'ele' ? `● ${g.leituraEle}` : `● ${g.leituraEla}`}
                 </span>
                 <h2><a href={`/livros/${livro.id}?origem=estante`}>{livro.titulo}</a></h2><p class="autor">{livro.autor}</p>
                 <div class="avaliacoes">
-                  {livro.notaEle !== null && <span><span class="ponto-verde">●</span> Ele <strong>{livro.notaEle.toFixed(1).replace('.', ',')}/5</strong></span>}
-                  {livro.notaEla !== null && <span><span class="ponto-vinho">●</span> Ela <strong>{livro.notaEla.toFixed(1).replace('.', ',')}/5</strong></span>}
+                  {livro.notaEle !== null && <span><span class="ponto-verde">●</span> {g.notaEle} <strong>{livro.notaEle.toFixed(1).replace('.', ',')}/5</strong></span>}
+                  {livro.notaEla !== null && <span><span class="ponto-vinho">●</span> {g.notaEla} <strong>{livro.notaEla.toFixed(1).replace('.', ',')}/5</strong></span>}
                 </div>
               </div>
             </article>
           ))}
         </div>
-        <div class="vazio" id="vazio" hidden><h2>Nenhum livro encontrado.</h2><p>Experimente outra busca ou escolha outro filtro.</p><button type="button" id="limpar">Limpar filtros</button></div>
+        <div class="vazio" id="vazio" hidden>
+          <h2>{livros.length === 0 ? t.vazioSemLivrosTitulo : t.vazioBuscaTitulo}</h2>
+          <p>{livros.length === 0 ? t.vazioSemLivrosDescricao : t.vazioBuscaDescricao}</p>
+          {livros.length > 0 && <button type="button" id="limpar">{t.limpar}</button>}
+        </div>
       </section>
-      <Encerramento titulo="Cada livro acrescenta uma nova história à nossa." rotulo="UM ACERVO EM CONSTRUÇÃO" descricao="Nossa estante cresce com o tempo. Quando os dois escrevemos sobre uma mesma obra, ela ganha naturalmente um segundo ponto de vista." principal={{ texto: 'Explorar Leituras a Dois', href: '/leituras-a-dois' }} secundaria={{ texto: 'Voltar ao início', href: '/' }} />
+      <Encerramento titulo={t.encTitulo} rotulo={t.encRotulo} descricao={t.encDescricao} principal={{ texto: t.encPrincipal, href: '/leituras-a-dois' }} secundaria={{ texto: t.encSecundario, href: '/' }} />
     </main>
     <Footer />
 
@@ -88,7 +95,7 @@ import { livros } from '../data/livros';
         const campo = ordem?.value || 'titulo';
         exibidos.sort((a,b) => campo === 'ano' ? Number(b.dataset.ano)-Number(a.dataset.ano) : (a.dataset[campo as 'titulo'|'autor'] || '').localeCompare(b.dataset[campo as 'titulo'|'autor'] || '', 'pt-BR'));
         exibidos.forEach(cartao => grade?.appendChild(cartao));
-        if (contagem) contagem.textContent = `Exibindo ${exibidos.length} ${exibidos.length === 1 ? 'livro' : 'livros'}`;
+        if (contagem) contagem.textContent = `${contagem.dataset.prefixo ?? 'Exibindo'} ${exibidos.length} ${exibidos.length === 1 ? (contagem.dataset.singular ?? 'livro') : (contagem.dataset.plural ?? 'livros')}`;
         if (vazio) vazio.hidden = exibidos.length !== 0;
       }
       filtros.forEach(botao => botao.addEventListener('click', () => {

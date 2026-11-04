@@ -1,4 +1,8 @@
 ---
+import t from '../data/editorial/home.json';
+import g from '../data/editorial/geral.json';
+import luiz from '../data/editorial/luiz.json';
+import heloisa from '../data/editorial/heloisa.json';
 import '../styles/mobile-polish.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
@@ -8,10 +12,11 @@ import { ultimasLeituras as leituras } from '../data/livros';
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Dois Pontos de Vista: um espaço para nossas leituras, opiniões e perspectivas." />
-    <title>Dois Pontos de Vista — Leituras, opiniões e perspectivas</title>
+    <meta name="description" content={t.descricaoMeta} />
+    <title>{g.tituloSite} — {g.tituloPaginaInicial}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -22,32 +27,36 @@ import { ultimasLeituras as leituras } from '../data/livros';
     <main id="conteudo-principal">
       <section class="hero container">
         <div class="hero-texto">
-          <p class="sobretitulo"><span class="ponto verde"></span> UM DIÁRIO DE LEITURAS A DOIS <span class="ponto vinho"></span></p>
-          <h1>Duas perspectivas.<br /><em>Infinitas histórias.</em></h1>
-          <p class="hero-descricao">Nem sempre lemos os mesmos livros. Nem sempre chegamos às mesmas conclusões. Aqui, guardamos as histórias que passam por nós e o que cada uma deixa pelo caminho.</p>
-          <a href="/estante" class="botao">Explore nossas leituras <span aria-hidden="true">↗</span></a>
+          <p class="sobretitulo"><span class="ponto verde"></span> {t.heroRotulo} <span class="ponto vinho"></span></p>
+          <h1>{t.heroTitulo1}<br /><em>{t.heroTitulo2}</em></h1>
+          <p class="hero-descricao">{t.heroDescricao}</p>
+          <a href="/estante" class="botao">{t.heroBotao} <span aria-hidden="true">↗</span></a>
         </div>
-        <div class="hero-arte" aria-label="Ilustração de dois leitores e um livro aberto" role="img">
-          <img class="livro-hero" src="/imagens/logo-dois-pontos-de-vista.png" alt="Dois leitores representados por dois círculos sobre as páginas de um livro aberto" width="885" height="508" />
+        <div class="hero-arte" aria-label={g.ariaIlustracaoLogo} role="img">
+          <img class="livro-hero" src="/imagens/logo-dois-pontos-de-vista.png" alt={g.altIlustracaoLogo} width="885" height="508" />
         </div>
       </section>
 
-      <section class="secao leituras" id="estante">
+      <section class:list={["secao", "leituras", { "sem-leituras": leituras.length === 0 }]} id="estante">
         <div class="container">
           <div class="secao-cabecalho">
-            <div><p class="sobretitulo">NOSSA BIBLIOTECA</p><h2>Últimas leituras<span class="cursor-titulo" aria-hidden="true"></span></h2></div>
-            <a class="link-discreto" href="/estante">Ver toda a estante ↗</a>
+            <div><p class="sobretitulo">{t.bibliotecaRotulo}</p><h2>{t.bibliotecaTitulo}<span class="cursor-titulo" aria-hidden="true"></span></h2></div>
+            <a class="link-discreto" href="/estante">{t.verEstante} ↗</a>
           </div>
-          <div class="carrossel-controles" aria-label="Controles das últimas leituras">
-            <button type="button" class="carrossel-seta" data-direcao="anterior" aria-label="Leitura anterior" disabled>←</button>
-            <span class="carrossel-contador" id="carrossel-contador" aria-live="polite">{leituras.length ? `1 de ${leituras.length}` : "Nenhuma leitura"}</span>
-            <button type="button" class="carrossel-seta" data-direcao="proxima" aria-label="Próxima leitura">→</button>
+          {leituras.length === 0 && <div class="leitura-vazia" role="status">
+            <p>{t.semLivros}</p>
+            <a href="/estante">{t.semLivrosBotao} ↗</a>
+          </div>}
+          <div class="carrossel-controles" aria-label={g.ariaControlsCarrossel}>
+            <button type="button" class="carrossel-seta" data-direcao="anterior" aria-label={t.leituraAnterior} disabled>←</button>
+            <span class="carrossel-contador" id="carrossel-contador" aria-live="polite">{leituras.length ? `1 de ${leituras.length}` : t.semLeitura}</span>
+            <button type="button" class="carrossel-seta" data-direcao="proxima" aria-label={t.proximaLeitura}>→</button>
           </div>
-          <div class="carrossel-bolinhas" id="carrossel-bolinhas" role="group" aria-label="Páginas das últimas leituras"></div>
-          <div class="grade-livros" id="carrossel-leituras" tabindex="0" role="region" aria-roledescription="carrossel" aria-label="Últimas leituras">
+          <div class="carrossel-bolinhas" id="carrossel-bolinhas" role="group" aria-label={g.ariaPaginasCarrossel}></div>
+          <div class="grade-livros" id="carrossel-leituras" tabindex="0" role="region" aria-roledescription="carrossel" aria-label={g.ariaCarrossel}>
             {leituras.map((livro) => (
               <article class="card-livro">
-                <a href={`/livros/${livro.id}?origem=inicio`} class="capa" style={`background:${livro.cor}`} aria-label={`Abrir ${livro.titulo}`}>
+                <a href={`/livros/${livro.id}?origem=inicio`} class="capa" style={`background:${livro.cor}`} aria-label={`${g.ariaAbrirLivro} ${livro.titulo}`}>
                   {livro.capa && <img class="capa-imagem" src={livro.capa} alt="" loading="lazy" onerror="this.remove()" onload="if(this.naturalWidth < 50) this.remove()" />}
                   <span class="capa-decoracao" aria-hidden="true">✦</span>
                   <span class="capa-titulo">{livro.titulo}</span>
@@ -55,24 +64,24 @@ import { ultimasLeituras as leituras } from '../data/livros';
                 </a>
                 <div class="card-corpo">
                   <p class={`etiqueta ${livro.tipo === 'dupla' ? 'etiqueta-dupla' : ''}`}>
-                    {livro.tipo === 'dupla' ? '● ●  LEITURA A DOIS' : `●  LEITURA ${livro.pessoa.toUpperCase()}`}
+                    {livro.tipo === 'dupla' ? `● ● ${g.leituraDupla.toUpperCase()}` : `● ${livro.pessoa === 'Ele' ? g.leituraEle.toUpperCase() : g.leituraEla.toUpperCase()}`}
                   </p>
                   <h3><a href={`/livros/${livro.id}?origem=inicio`}>{livro.titulo}</a></h3>
                   <p class="livro-autor">{livro.autor}</p>
                   <p class="livro-descricao">{livro.editorial}</p>
                   <div class="card-rodape">
                     <div class="notas-leitores" aria-label="Avaliações dos leitores">
-                      {livro.notaEle !== null && <span class="nota-leitor nota-luiz"><span class="nota-ponto" aria-hidden="true">●</span> Luiz: <strong>{livro.notaEle.toFixed(1).replace('.', ',')}/5</strong></span>}
-                      {livro.notaEla !== null && <span class="nota-leitor nota-heloisa"><span class="nota-ponto" aria-hidden="true">●</span> Heloísa: <strong>{livro.notaEla.toFixed(1).replace('.', ',')}/5</strong></span>}
-                      {livro.notaEle === null && livro.notaEla === null && <span>Sem avaliação</span>}
+                      {livro.notaEle !== null && <span class="nota-leitor nota-luiz"><span class="nota-ponto" aria-hidden="true">●</span> {g.notaLuiz}: <strong>{livro.notaEle.toFixed(1).replace('.', ',')}/5</strong></span>}
+                      {livro.notaEla !== null && <span class="nota-leitor nota-heloisa"><span class="nota-ponto" aria-hidden="true">●</span> {g.notaHeloisa}: <strong>{livro.notaEla.toFixed(1).replace('.', ',')}/5</strong></span>}
+                      {livro.notaEle === null && livro.notaEla === null && <span>{t.semAvaliacao}</span>}
                     </div>
-                    <span class="data-publicacao" title="Data da publicação mais recente">{livro.data}</span>
+                    <span class="data-publicacao" title={g.dataPublicacaoRecente}>{livro.data}</span>
                   </div>
                 </div>
               </article>
             ))}
           </div>
-          <p class="aviso-demo">Os livros e as sinopses de demonstração são exemplos editáveis em Markdown.</p>
+          
         </div>
       </section>
 
@@ -82,10 +91,10 @@ import { ultimasLeituras as leituras } from '../data/livros';
             <img class="marca-secao" src="/imagens/logo-dois-pontos-de-vista.png" width="885" height="508" alt="" loading="lazy" />
           </div>
           <div>
-            <p class="sobretitulo">QUANDO OS CAMINHOS SE ENCONTRAM</p>
-            <h2>Um livro.<br /><em>Dois pontos de vista.</em></h2>
-            <p>Às vezes um de nós lê primeiro. Meses ou anos depois, o outro encontra a mesma história. Quando isso acontece, a página do livro passa a reunir nossas avaliações e os links para cada opinião completa — cada uma com seu próprio espaço.</p>
-            <a class="botao botao-leituras" href="/leituras-a-dois">Explorar leituras a dois <span aria-hidden="true">↗</span></a>
+            <p class="sobretitulo">{t.duplaRotulo}</p>
+            <h2>{t.duplaTitulo1}<br /><em>{t.duplaTitulo2}</em></h2>
+            <p>{t.duplaDescricao}</p>
+            <a class="botao botao-leituras" href="/leituras-a-dois">{t.duplaBotao} <span aria-hidden="true">↗</span></a>
           </div>
         </div>
       </section>
@@ -93,15 +102,15 @@ import { ultimasLeituras as leituras } from '../data/livros';
       <section class="secao sobre" id="sobre">
         <div class="container sobre-grade">
           <div>
-            <p class="sobretitulo">QUEM ESTÁ POR TRÁS DAS PÁGINAS?</p>
-            <h2>Prazer, somos <em>dois leitores.</em><span class="cursor-titulo" aria-hidden="true"></span></h2>
-            <p>Este é o nosso cantinho para falar dos livros que amamos, dos que nos desafiam e até daqueles sobre os quais discordamos.</p>
-            <p>Cada um tem sua própria estante, sua biografia e suas avaliações. O que une tudo é a vontade de compartilhar o prazer da leitura.</p>
-            <a class="botao botao-sobre" href="/sobre">Conheça nossa história <span aria-hidden="true">↗</span></a>
+            <p class="sobretitulo">{t.sobreRotulo}</p>
+            <h2>{t.sobreTitulo1} <em>{t.sobreTitulo2}</em><span class="cursor-titulo" aria-hidden="true"></span></h2>
+            <p>{t.sobreTexto1}</p>
+            <p>{t.sobreTexto2}</p>
+            <a class="botao botao-sobre" href="/sobre">{t.sobreBotao} <span aria-hidden="true">↗</span></a>
           </div>
           <div class="perfis">
-            <a href="/autores/luiz-anselmo" class="perfil perfil-verde"><img class="foto-perfil" src="/imagens/luiz-anselmo.jpg" alt="Luiz Anselmo"/><strong>Luiz Anselmo</strong><small>O olhar dele · biografia e avaliações</small></a>
-            <a href="/autores/heloisa-marques" class="perfil perfil-vinho"><img class="foto-perfil" src="/imagens/heloisa-marques.jpg" alt="Heloísa Marques"/><strong>Heloísa Marques</strong><small>O olhar dela · biografia e avaliações</small></a>
+            <a href="/autores/luiz-anselmo" class="perfil perfil-verde"><img class="foto-perfil" src="/imagens/luiz-anselmo.jpg" alt="Luiz Anselmo"/><strong>{luiz.nome}</strong><small>{t.perfilLuizDesc}</small></a>
+            <a href="/autores/heloisa-marques" class="perfil perfil-vinho"><img class="foto-perfil" src="/imagens/heloisa-marques.jpg" alt="Heloísa Marques"/><strong>{heloisa.nome}</strong><small>{t.perfilHeloisaDesc}</small></a>
           </div>
         </div>
       </section>
@@ -174,6 +183,7 @@ import { ultimasLeituras as leituras } from '../data/livros';
   const proxima = document.querySelector<HTMLButtonElement>('[data-direcao="proxima"]');
   const contador = document.querySelector<HTMLElement>('#carrossel-contador');
   const areaBolinhas = document.querySelector<HTMLElement>('#carrossel-bolinhas');
+  const controles = document.querySelector<HTMLElement>('.carrossel-controles');
 
   if (trilho && anterior && proxima && contador && areaBolinhas) {
     const cartoes = Array.from(trilho.querySelectorAll<HTMLElement>('.card-livro'));
@@ -182,7 +192,7 @@ import { ultimasLeituras as leituras } from '../data/livros';
     let redimensionamentoAnterior = 0;
     let rolagemPendente = false;
     const movimentoReduzido = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const porPagina = () => window.matchMedia('(max-width: 610px)').matches ? 1 :
+    const porPagina = () => window.matchMedia('(max-width: 700px)').matches ? 1 :
       window.matchMedia('(max-width: 850px)').matches ? 2 : 3;
     const quantidadePaginas = () => Math.ceil(cartoes.length / porPagina());
     const deslocamentoInicial = (pagina: number) => {
@@ -190,6 +200,9 @@ import { ultimasLeituras as leituras } from '../data/livros';
       return Math.max(0, cartoes[indice].offsetLeft - cartoes[0].offsetLeft);
     };
     const atualizarInterface = () => {
+      // Uma única página não precisa de setas nem de paginação visual.
+      if (controles) controles.hidden = paginas <= 1;
+      areaBolinhas.hidden = paginas <= 1;
       anterior.disabled = paginas === 0 || paginaAtual === 0;
       proxima.disabled = paginas === 0 || paginaAtual >= paginas - 1;
       contador.textContent = paginas ? `${paginaAtual + 1} de ${paginas}` : 'Nenhuma leitura';
@@ -266,4 +279,8 @@ import { ultimasLeituras as leituras } from '../data/livros';
 .carrossel-bolinha.ativa::before{background:#884C55;transform:scale(1.25)}
 .carrossel-bolinha[hidden]{display:none!important}
 .carrossel-bolinha:focus-visible{outline:2px solid #884C55;outline-offset:4px}
+</style>
+
+<style is:global>
+.carrossel-controles[hidden],.carrossel-bolinhas[hidden]{display:none!important}
 </style>

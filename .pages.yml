@@ -1,140 +1,1160 @@
-# Dois Pontos de Vista — Painel editorial (Pages CMS)
-# Os campos devem manter exatamente estes nomes, pois o Astro os utiliza.
+# Dois Pontos de Vista — painel editorial no Pages CMS
+# Livros e opiniões usam Markdown. Textos fixos do site usam JSON.
 media:
   input: public/imagens/livros
   output: /imagens/livros
   rename: safe
-  categories: [image]
-
+  categories:
+  - image
 content:
-  - name: livros
-    label: Livros
-    type: collection
-    path: src/content/livros
-    format: yaml-frontmatter
-    filename:
-      template: "{primary}.md"
-      field: create
-    view:
-      primary: titulo
-      fields: [titulo, autor, genero, publicado]
-      search: [titulo, autor]
+- name: livros
+  label: Livros
+  type: collection
+  path: src/content/livros
+  format: yaml-frontmatter
+  filename:
+    template: '{primary}.md'
+    field: create
+  view:
+    primary: titulo
+    fields:
+    - titulo
+    - autor
+    - genero
+    - publicado
+    search:
+    - titulo
+    - autor
+  operations:
+    rename: false
+    delete: false
+  fields:
+  - name: titulo
+    label: Título da obra
+    type: string
+    required: true
+  - name: autor
+    label: Autor do livro
+    type: string
+    required: true
+  - name: genero
+    label: Gênero literário
+    type: string
+    required: true
+  - name: ano
+    label: Ano de publicação da obra
+    type: number
+    required: true
+  - name: sinopse
+    label: Sinopse (sem spoilers)
+    type: text
+    required: true
+  - name: capa
+    label: Imagem da capa
+    type: image
+    description: Envie ou selecione uma imagem da biblioteca do projeto. Evite URLs externas.
+  - name: cor
+    label: Cor alternativa para capa não disponível
+    type: string
+    default: '#53675A'
+  - name: iniciais
+    label: Iniciais para capa alternativa
+    type: string
+  - name: publicado
+    label: Livro liberado para publicação
+    type: boolean
+    default: false
+  - name: demonstrativo
+    label: Conteúdo demonstrativo
+    type: boolean
+    default: false
+- name: opinioes
+  label: Opiniões e avaliações
+  type: collection
+  path: src/content/opinioes
+  format: yaml-frontmatter
+  filename:
+    template: '{livro}-{pessoa}.md'
+    field: create
+  view:
+    primary: titulo
+    fields:
+    - titulo
+    - livro
+    - pessoa
+    - dataPublicacao
+    - publicado
+    search:
+    - titulo
+    - livro
+  operations:
+    rename: false
+    delete: false
+  fields:
+  - name: livro
+    label: Livro associado
+    type: reference
+    required: true
+    options:
+      collection: livros
+      value: '{name}'
+      label: '{titulo}'
+      search: titulo,autor
+    description: Cadastre o livro primeiro, depois selecione-o aqui.
+  - name: pessoa
+    label: Quem escreveu a opinião
+    type: select
+    required: true
+    options:
+      values:
+      - name: ele
+        label: Luiz Anselmo
+      - name: ela
+        label: Heloísa Marques
+  - name: titulo
+    label: Título da opinião
+    type: string
+    required: true
+  - name: nota
+    label: Nota (de 0 a 5, admite decimal)
+    type: number
+    description: 'Opcional. Exemplo: 4.5'
+  - name: dataLeitura
+    label: Data de conclusão da leitura
+    type: date
+    required: true
+    options:
+      format: yyyy-MM-dd
+  - name: dataPublicacao
+    label: Data de publicação da opinião
+    type: date
+    required: true
+    options:
+      format: yyyy-MM-dd
+  - name: resumo
+    label: Resumo da opinião
+    type: text
+    required: true
+  - name: publicado
+    label: Publicar opinião no site
+    type: boolean
+    default: false
+  - name: demonstrativo
+    label: Conteúdo demonstrativo
+    type: boolean
+    default: false
+  - name: body
+    label: Texto completo com imagens
+    type: rich-text
+    options:
+      format: markdown
+      switcher: true
+      rename: safe
+- name: textos-do-site
+  label: Textos do site
+  type: group
+  items:
+  - name: editorial-geral
+    label: Identidade, menu e textos globais
+    type: file
+    path: src/data/editorial/geral.json
+    format: json
     operations:
-      rename: false
       delete: false
     fields:
-      - name: titulo
-        label: Título da obra
-        type: string
-        required: true
-      - name: autor
-        label: Autor do livro
-        type: string
-        required: true
-      - name: genero
-        label: Gênero literário
-        type: string
-        required: true
-      - name: ano
-        label: Ano de publicação da obra
-        type: number
-        required: true
-      - name: sinopse
-        label: Sinopse (sem spoilers)
-        type: text
-        required: true
-      - name: capa
-        label: Imagem da capa
-        type: image
-        description: "Escolha ou envie uma capa. Pode manter a URL externa existente."
-      - name: cor
-        label: Cor alternativa para capa não disponível
-        type: string
-        default: "#53675A"
-      - name: iniciais
-        label: Iniciais para capa alternativa
-        type: string
-      - name: publicado
-        label: Livro liberado para publicação
-        type: boolean
-        default: false
-      - name: demonstrativo
-        label: Conteúdo demonstrativo
-        type: boolean
-        default: false
-
-  - name: opinioes
-    label: Opiniões e avaliações
-    type: collection
-    path: src/content/opinioes
-    format: yaml-frontmatter
-    filename:
-      template: "{livro}-{pessoa}.md"
-      field: create
-    view:
-      primary: titulo
-      fields: [titulo, livro, pessoa, dataPublicacao, publicado]
-      search: [titulo, livro]
+    - name: marcaLinha1
+      label: Marca — primeira linha
+      type: string
+      required: true
+    - name: marcaLinha2
+      label: Marca — segunda linha
+      type: string
+      required: true
+    - name: navInicio
+      label: Menu — inicio
+      type: string
+      required: true
+    - name: navEstante
+      label: Menu — estante
+      type: string
+      required: true
+    - name: navDuplas
+      label: Menu — duplas
+      type: string
+      required: true
+    - name: navSobre
+      label: Menu — sobre
+      type: string
+      required: true
+    - name: menu
+      label: Menu
+      type: string
+      required: true
+    - name: pular
+      label: Pular
+      type: string
+      required: true
+    - name: assinatura
+      label: Texto do rodapé
+      type: string
+      required: true
+    - name: leituraDupla
+      label: Categoria — leitura a dois
+      type: string
+      required: true
+    - name: leituraEle
+      label: Categoria — leitura de Luiz
+      type: string
+      required: true
+    - name: leituraEla
+      label: Categoria — leitura de Heloísa
+      type: string
+      required: true
+    - name: notaLuiz
+      label: Nome na nota — Luiz
+      type: string
+      required: true
+    - name: notaHeloisa
+      label: Nome na nota — Heloísa
+      type: string
+      required: true
+    - name: semNota
+      label: Texto quando não houver nota
+      type: string
+      required: true
+    - name: avaliacao
+      label: Avaliacao
+      type: string
+      required: true
+    - name: rotuloCapa
+      label: Texto da capa alternativa
+      type: string
+      required: true
+    - name: paginaInicial
+      label: Nome do projeto
+      type: string
+      required: true
+    - name: botaoVoltarEstante
+      label: Botao voltar estante
+      type: string
+      required: true
+    - name: botaoVoltarInicio
+      label: Botao voltar inicio
+      type: string
+      required: true
+    - name: botaoVisitarDuplas
+      label: Botao visitar duplas
+      type: string
+      required: true
+    - name: botaoVoltarSecao
+      label: Botao voltar secao
+      type: string
+      required: true
+    - name: botaoEstante
+      label: Botao estante
+      type: string
+      required: true
+    - name: semAvaliacao
+      label: Texto quando não houver avaliação
+      type: string
+      required: true
+    - name: tituloSite
+      label: Nome do site
+      type: string
+      required: true
+    - name: tituloPaginaInicial
+      label: Título — pagina inicial
+      type: string
+      required: true
+    - name: rotuloEncerramento
+      label: Rótulo — encerramento
+      type: string
+      required: true
+    - name: ariaEncerramento
+      label: Acessibilidade — encerramento
+      type: string
+      required: true
+    - name: ariaInicio
+      label: Acessibilidade — inicio
+      type: string
+      required: true
+    - name: notaEle
+      label: Avaliação — Luiz (rótulo)
+      type: string
+      required: true
+    - name: notaEla
+      label: Avaliação — Heloísa (rótulo)
+      type: string
+      required: true
+    - name: ariaAbrirLivro
+      label: Acessibilidade — abrir livro
+      type: string
+      required: true
+    - name: ariaVerLivro
+      label: Acessibilidade — ver livro
+      type: string
+      required: true
+    - name: ariaCapaLivro
+      label: Acessibilidade — capa livro
+      type: string
+      required: true
+    - name: dataPublicacaoRecente
+      label: Data publicacao recente
+      type: string
+      required: true
+    - name: ariaCarrossel
+      label: Acessibilidade — carrossel
+      type: string
+      required: true
+    - name: ariaPaginasCarrossel
+      label: Acessibilidade — paginas carrossel
+      type: string
+      required: true
+    - name: ariaControlsCarrossel
+      label: Acessibilidade — controls carrossel
+      type: string
+      required: true
+    - name: ariaIlustracaoLogo
+      label: Acessibilidade — ilustracao logo
+      type: string
+      required: true
+    - name: altIlustracaoLogo
+      label: Descrição de imagem — ilustracao logo
+      type: string
+      required: true
+  - name: editorial-home
+    label: Início — títulos e textos
+    type: file
+    path: src/data/editorial/home.json
+    format: json
     operations:
-      rename: false
       delete: false
     fields:
-      - name: livro
-        label: Livro associado
-        type: reference
-        required: true
-        options:
-          collection: livros
-          value: "{name}"
-          label: "{titulo}"
-          search: "titulo,autor"
-        description: "Cadastre o livro primeiro, depois selecione-o aqui."
-      - name: pessoa
-        label: Quem escreveu a opinião
-        type: select
-        required: true
-        options:
-          values:
-            - name: ele
-              label: Luiz Anselmo
-            - name: ela
-              label: Heloísa Marques
-      - name: titulo
-        label: Título da opinião
-        type: string
-        required: true
-      - name: nota
-        label: Nota (de 0 a 5, admite decimal)
-        type: number
-        description: "Opcional. Exemplo: 4.5"
-      - name: dataLeitura
-        label: Data de conclusão da leitura
-        type: date
-        required: true
-        options:
-          format: yyyy-MM-dd
-      - name: dataPublicacao
-        label: Data de publicação da opinião
-        type: date
-        required: true
-        options:
-          format: yyyy-MM-dd
-      - name: resumo
-        label: Resumo da opinião
-        type: text
-        required: true
-      - name: publicado
-        label: Publicar opinião no site
-        type: boolean
-        default: false
-      - name: demonstrativo
-        label: Conteúdo demonstrativo
-        type: boolean
-        default: false
-      - name: body
-        label: Texto completo com imagens
-        type: rich-text
-        options:
-          format: markdown
-          switcher: true
-          rename: safe
+    - name: heroRotulo
+      label: Abertura — rotulo
+      type: string
+      required: true
+    - name: heroTitulo1
+      label: Abertura — titulo 1
+      type: string
+      required: true
+    - name: heroTitulo2
+      label: Abertura — titulo 2
+      type: string
+      required: true
+    - name: heroDescricao
+      label: Abertura — descricao
+      type: text
+      required: true
+    - name: heroBotao
+      label: Abertura — botao
+      type: string
+      required: true
+    - name: bibliotecaRotulo
+      label: Biblioteca — rotulo
+      type: string
+      required: true
+    - name: bibliotecaTitulo
+      label: Biblioteca — titulo
+      type: string
+      required: true
+    - name: verEstante
+      label: Ver estante
+      type: string
+      required: true
+    - name: semLivros
+      label: Sem livros
+      type: string
+      required: true
+    - name: semLivrosBotao
+      label: Sem livros botao
+      type: string
+      required: true
+    - name: leituraAnterior
+      label: Leitura anterior
+      type: string
+      required: true
+    - name: proximaLeitura
+      label: Proxima leitura
+      type: string
+      required: true
+    - name: semLeitura
+      label: Sem leitura
+      type: string
+      required: true
+    - name: semAvaliacao
+      label: Texto quando não houver avaliação
+      type: string
+      required: true
+    - name: duplaRotulo
+      label: Leitura a Dois — rotulo
+      type: string
+      required: true
+    - name: duplaTitulo1
+      label: Leitura a Dois — titulo 1
+      type: string
+      required: true
+    - name: duplaTitulo2
+      label: Leitura a Dois — titulo 2
+      type: string
+      required: true
+    - name: duplaDescricao
+      label: Leitura a Dois — descricao
+      type: text
+      required: true
+    - name: duplaBotao
+      label: Leitura a Dois — botao
+      type: string
+      required: true
+    - name: sobreRotulo
+      label: Sobre — rotulo
+      type: string
+      required: true
+    - name: sobreTitulo1
+      label: Sobre — titulo 1
+      type: string
+      required: true
+    - name: sobreTitulo2
+      label: Sobre — titulo 2
+      type: string
+      required: true
+    - name: sobreTexto1
+      label: Sobre — texto 1
+      type: text
+      required: true
+    - name: sobreTexto2
+      label: Sobre — texto 2
+      type: text
+      required: true
+    - name: sobreBotao
+      label: Sobre — botao
+      type: string
+      required: true
+    - name: perfilLuizDesc
+      label: Perfil — luiz desc
+      type: string
+      required: true
+    - name: perfilHeloisaDesc
+      label: Perfil — heloisa desc
+      type: string
+      required: true
+    - name: descricaoMeta
+      label: Descrição para buscadores
+      type: text
+      required: true
+    - name: tituloAba
+      label: Título da aba do navegador
+      type: string
+      required: true
+  - name: editorial-estante
+    label: Nossa Estante — textos e filtros
+    type: file
+    path: src/data/editorial/estante.json
+    format: json
+    operations:
+      delete: false
+    fields:
+    - name: rotulo
+      label: Rotulo
+      type: string
+      required: true
+    - name: titulo1
+      label: Título — primeira parte
+      type: string
+      required: true
+    - name: titulo2
+      label: Título — parte em destaque
+      type: string
+      required: true
+    - name: descricao
+      label: Descrição curta da página
+      type: text
+      required: true
+    - name: contadorLivros
+      label: Contadores — livros
+      type: string
+      required: true
+    - name: contadorDuplas
+      label: Contadores — duplas
+      type: string
+      required: true
+    - name: busca
+      label: Busca
+      type: string
+      required: true
+    - name: ordenarPor
+      label: Ordenar por
+      type: string
+      required: true
+    - name: ordemTitulo
+      label: Ordenação — titulo
+      type: string
+      required: true
+    - name: ordemAutor
+      label: Ordenação — autor
+      type: string
+      required: true
+    - name: ordemAno
+      label: Ordenação — ano
+      type: string
+      required: true
+    - name: filtroTodos
+      label: Filtros — todos
+      type: string
+      required: true
+    - name: filtroEle
+      label: Filtros — ele
+      type: string
+      required: true
+    - name: filtroEla
+      label: Filtros — ela
+      type: string
+      required: true
+    - name: filtroDuplo
+      label: Filtros — duplo
+      type: string
+      required: true
+    - name: exibindo
+      label: Exibindo
+      type: string
+      required: true
+    - name: livroSingular
+      label: Livro singular
+      type: string
+      required: true
+    - name: livroPlural
+      label: Livro plural
+      type: string
+      required: true
+    - name: vazioSemLivrosTitulo
+      label: Estado vazio — sem livros titulo
+      type: string
+      required: true
+    - name: vazioSemLivrosDescricao
+      label: Estado vazio — sem livros descricao
+      type: text
+      required: true
+    - name: vazioBuscaTitulo
+      label: Estado vazio — busca titulo
+      type: string
+      required: true
+    - name: vazioBuscaDescricao
+      label: Estado vazio — busca descricao
+      type: text
+      required: true
+    - name: limpar
+      label: Limpar
+      type: string
+      required: true
+    - name: encRotulo
+      label: Encerramento — rotulo
+      type: string
+      required: true
+    - name: encTitulo
+      label: Encerramento — titulo
+      type: string
+      required: true
+    - name: encDescricao
+      label: Encerramento — descricao
+      type: text
+      required: true
+    - name: encPrincipal
+      label: Encerramento — principal
+      type: string
+      required: true
+    - name: encSecundario
+      label: Encerramento — secundario
+      type: string
+      required: true
+    - name: descricaoMeta
+      label: Descrição para buscadores
+      type: text
+      required: true
+    - name: tituloAba
+      label: Título da aba do navegador
+      type: string
+      required: true
+  - name: editorial-leituras
+    label: Leituras a Dois — textos e filtros
+    type: file
+    path: src/data/editorial/leituras.json
+    format: json
+    operations:
+      delete: false
+    fields:
+    - name: rotulo
+      label: Rotulo
+      type: string
+      required: true
+    - name: titulo1
+      label: Título — primeira parte
+      type: string
+      required: true
+    - name: titulo2
+      label: Título — parte em destaque
+      type: string
+      required: true
+    - name: descricao
+      label: Descrição curta da página
+      type: text
+      required: true
+    - name: contadorSingular
+      label: Contadores — singular
+      type: string
+      required: true
+    - name: contadorPlural
+      label: Contadores — plural
+      type: string
+      required: true
+    - name: manifesto1Titulo
+      label: Apresentação — 1titulo
+      type: text
+      required: true
+    - name: manifesto1Texto
+      label: Apresentação — 1texto
+      type: text
+      required: true
+    - name: manifesto2Titulo
+      label: Apresentação — 2titulo
+      type: text
+      required: true
+    - name: manifesto2Texto
+      label: Apresentação — 2texto
+      type: text
+      required: true
+    - name: busca
+      label: Busca
+      type: string
+      required: true
+    - name: ordenarPor
+      label: Ordenar por
+      type: string
+      required: true
+    - name: ordemTitulo
+      label: Ordenação — titulo
+      type: string
+      required: true
+    - name: ordemAutor
+      label: Ordenação — autor
+      type: string
+      required: true
+    - name: ordemAno
+      label: Ordenação — ano
+      type: string
+      required: true
+    - name: exibindo
+      label: Exibindo
+      type: string
+      required: true
+    - name: livroSingular
+      label: Livro singular
+      type: string
+      required: true
+    - name: livroPlural
+      label: Livro plural
+      type: string
+      required: true
+    - name: vazioSemLivrosTitulo
+      label: Estado vazio — sem livros titulo
+      type: string
+      required: true
+    - name: vazioSemLivrosDescricao
+      label: Estado vazio — sem livros descricao
+      type: text
+      required: true
+    - name: vazioBuscaTitulo
+      label: Estado vazio — busca titulo
+      type: string
+      required: true
+    - name: vazioBuscaDescricao
+      label: Estado vazio — busca descricao
+      type: text
+      required: true
+    - name: limpar
+      label: Limpar
+      type: string
+      required: true
+    - name: encRotulo
+      label: Encerramento — rotulo
+      type: string
+      required: true
+    - name: encTitulo
+      label: Encerramento — titulo
+      type: string
+      required: true
+    - name: encDescricao
+      label: Encerramento — descricao
+      type: text
+      required: true
+    - name: encPrincipal
+      label: Encerramento — principal
+      type: string
+      required: true
+    - name: encSecundario
+      label: Encerramento — secundario
+      type: string
+      required: true
+    - name: descricaoMeta
+      label: Descrição para buscadores
+      type: text
+      required: true
+    - name: tituloAba
+      label: Título da aba do navegador
+      type: string
+      required: true
+  - name: editorial-sobre
+    label: Sobre Nós — apresentação e seções
+    type: file
+    path: src/data/editorial/sobre.json
+    format: json
+    operations:
+      delete: false
+    fields:
+    - name: rotulo
+      label: Rotulo
+      type: string
+      required: true
+    - name: titulo1
+      label: Título — primeira parte
+      type: string
+      required: true
+    - name: titulo2
+      label: Título — parte em destaque
+      type: string
+      required: true
+    - name: introducao1Antes
+      label: Introdução — 1antes
+      type: text
+      required: true
+    - name: introducao1Depois
+      label: Introdução — 1depois
+      type: text
+      required: true
+    - name: introducao2
+      label: Introdução — 2
+      type: text
+      required: true
+    - name: botaoEntenda
+      label: Botao entenda
+      type: string
+      required: true
+    - name: legendaFoto
+      label: Legenda foto
+      type: string
+      required: true
+    - name: manifestoRotulo
+      label: Apresentação — rotulo
+      type: text
+      required: true
+    - name: manifestoTitulo1
+      label: Apresentação — titulo 1
+      type: text
+      required: true
+    - name: manifestoTitulo2
+      label: Apresentação — titulo 2
+      type: text
+      required: true
+    - name: manifestoTexto
+      label: Apresentação — texto
+      type: text
+      required: true
+    - name: comoRotulo
+      label: Como funciona — rotulo
+      type: string
+      required: true
+    - name: comoTitulo1
+      label: Como funciona — titulo 1
+      type: string
+      required: true
+    - name: comoTitulo2
+      label: Como funciona — titulo 2
+      type: string
+      required: true
+    - name: comoDescricao
+      label: Como funciona — descricao
+      type: text
+      required: true
+    - name: etapa1Titulo
+      label: Etapa — 1titulo
+      type: string
+      required: true
+    - name: etapa1Texto
+      label: Etapa — 1texto
+      type: text
+      required: true
+    - name: etapa2Titulo
+      label: Etapa — 2titulo
+      type: string
+      required: true
+    - name: etapa2Texto
+      label: Etapa — 2texto
+      type: text
+      required: true
+    - name: etapa3Titulo
+      label: Etapa — 3titulo
+      type: string
+      required: true
+    - name: etapa3Texto
+      label: Etapa — 3texto
+      type: text
+      required: true
+    - name: perfisRotulo
+      label: Perfis — rotulo
+      type: string
+      required: true
+    - name: perfisTitulo1
+      label: Perfis — titulo 1
+      type: string
+      required: true
+    - name: perfisTitulo2
+      label: Perfis — titulo 2
+      type: string
+      required: true
+    - name: perfisDescricao
+      label: Perfis — descricao
+      type: text
+      required: true
+    - name: perfilLuizRotulo
+      label: Perfil — luiz rotulo
+      type: string
+      required: true
+    - name: perfilLuizDescricao
+      label: Perfil — luiz descricao
+      type: text
+      required: true
+    - name: perfilHeloisaRotulo
+      label: Perfil — heloisa rotulo
+      type: string
+      required: true
+    - name: perfilHeloisaDescricao
+      label: Perfil — heloisa descricao
+      type: text
+      required: true
+    - name: perfilBotao
+      label: Perfil — botao
+      type: string
+      required: true
+    - name: encTitulo
+      label: Encerramento — titulo
+      type: string
+      required: true
+    - name: encDescricao
+      label: Encerramento — descricao
+      type: text
+      required: true
+    - name: encPrincipal
+      label: Encerramento — principal
+      type: string
+      required: true
+    - name: encSecundario
+      label: Encerramento — secundario
+      type: string
+      required: true
+    - name: descricaoMeta
+      label: Descrição para buscadores
+      type: text
+      required: true
+    - name: tituloAba
+      label: Título da aba do navegador
+      type: string
+      required: true
+  - name: editorial-perfil
+    label: Perfis — textos em comum
+    type: file
+    path: src/data/editorial/perfil.json
+    format: json
+    operations:
+      delete: false
+    fields:
+    - name: linkLeituras
+      label: Link — leituras
+      type: string
+      required: true
+    - name: estatLivros
+      label: Estatística — livros
+      type: string
+      required: true
+    - name: estatMedia
+      label: Estatística — media
+      type: string
+      required: true
+    - name: estatDuplas
+      label: Estatística — duplas
+      type: string
+      required: true
+    - name: rotuloHistoria
+      label: Rótulo — historia
+      type: text
+      required: true
+    - name: tituloHistoria1
+      label: Título — historia 1
+      type: text
+      required: true
+    - name: tituloHistoria2
+      label: Título — historia 2
+      type: text
+      required: true
+    - name: rotuloLeituras
+      label: Rótulo — leituras
+      type: string
+      required: true
+    - name: tituloLeituras1
+      label: Título — leituras 1
+      type: string
+      required: true
+    - name: tituloLeituras2
+      label: Título — leituras 2
+      type: string
+      required: true
+    - name: descricaoLeiturasAntes
+      label: Descricao leituras antes
+      type: text
+      required: true
+    - name: descricaoLeiturasDepois
+      label: Descricao leituras depois
+      type: text
+      required: true
+    - name: linkEstante
+      label: Link — estante
+      type: string
+      required: true
+    - name: minhaAvaliacao
+      label: Minha avaliacao
+      type: string
+      required: true
+    - name: linkOpiniao
+      label: Link — opiniao
+      type: string
+      required: true
+    - name: rotuloOutro
+      label: Rótulo — outro
+      type: string
+      required: true
+    - name: tituloOutro1
+      label: Título — outro 1
+      type: string
+      required: true
+    - name: tituloOutro2
+      label: Título — outro 2
+      type: string
+      required: true
+    - name: descricaoOutroAntes
+      label: Descricao outro antes
+      type: text
+      required: true
+    - name: linkOutro
+      label: Link — outro
+      type: string
+      required: true
+    - name: estanteVazia
+      label: Estante vazia
+      type: string
+      required: true
+  - name: editorial-luiz
+    label: Autor — Luiz Anselmo
+    type: file
+    path: src/data/editorial/luiz.json
+    format: json
+    operations:
+      delete: false
+    fields:
+    - name: nome
+      label: Nome do autor
+      type: string
+      required: true
+    - name: titulo
+      label: Título da seção
+      type: string
+      required: true
+    - name: descricao
+      label: Descrição curta da página
+      type: text
+      required: true
+    - name: frase
+      label: Frase de destaque
+      type: string
+      required: true
+    - name: biografia
+      label: Biografia (parágrafos separados por linha vazia)
+      type: text
+      required: true
+  - name: editorial-heloisa
+    label: Autora — Heloísa Marques
+    type: file
+    path: src/data/editorial/heloisa.json
+    format: json
+    operations:
+      delete: false
+    fields:
+    - name: nome
+      label: Nome do autor
+      type: string
+      required: true
+    - name: titulo
+      label: Título da seção
+      type: string
+      required: true
+    - name: descricao
+      label: Descrição curta da página
+      type: text
+      required: true
+    - name: frase
+      label: Frase de destaque
+      type: string
+      required: true
+    - name: biografia
+      label: Biografia (parágrafos separados por linha vazia)
+      type: text
+      required: true
+  - name: editorial-livro
+    label: Página do livro — rótulos e botões
+    type: file
+    path: src/data/editorial/livro.json
+    format: json
+    operations:
+      delete: false
+    fields:
+    - name: voltarEstante
+      label: Voltar estante
+      type: string
+      required: true
+    - name: linkDuplas
+      label: Link — duplas
+      type: string
+      required: true
+    - name: leituraDois
+      label: Leitura dois
+      type: string
+      required: true
+    - name: leituraEle
+      label: Categoria — leitura de Luiz
+      type: string
+      required: true
+    - name: leituraEla
+      label: Categoria — leitura de Heloísa
+      type: string
+      required: true
+    - name: notaEle
+      label: Avaliação — Luiz (rótulo)
+      type: string
+      required: true
+    - name: notaEla
+      label: Avaliação — Heloísa (rótulo)
+      type: string
+      required: true
+    - name: semNota
+      label: Texto quando não houver nota
+      type: string
+      required: true
+    - name: rotuloOlhares
+      label: Rótulo — olhares
+      type: string
+      required: true
+    - name: tituloDois
+      label: Título — dois
+      type: string
+      required: true
+    - name: tituloIndividual
+      label: Título — individual
+      type: string
+      required: true
+    - name: descricaoOlhares
+      label: Descricao olhares
+      type: text
+      required: true
+    - name: rotuloEle
+      label: Rótulo — ele
+      type: string
+      required: true
+    - name: rotuloEla
+      label: Rótulo — ela
+      type: string
+      required: true
+    - name: lerOpiniao
+      label: Ler opiniao
+      type: string
+      required: true
+    - name: encTitulo
+      label: Encerramento — titulo
+      type: string
+      required: true
+    - name: encPrincipal
+      label: Encerramento — principal
+      type: string
+      required: true
+    - name: encSecundario
+      label: Encerramento — secundario
+      type: string
+      required: true
+    - name: encTerciario
+      label: Encerramento — terciario
+      type: string
+      required: true
+  - name: editorial-opiniao
+    label: Página da opinião — rótulos e botões
+    type: file
+    path: src/data/editorial/opiniao.json
+    format: json
+    operations:
+      delete: false
+    fields:
+    - name: voltarLivro
+      label: Voltar livro
+      type: string
+      required: true
+    - name: rotuloEle
+      label: Rótulo — ele
+      type: string
+      required: true
+    - name: rotuloEla
+      label: Rótulo — ela
+      type: string
+      required: true
+    - name: por
+      label: Por
+      type: string
+      required: true
+    - name: labelLivro
+      label: Label livro
+      type: string
+      required: true
+    - name: labelLeitura
+      label: Label leitura
+      type: string
+      required: true
+    - name: labelAvaliacao
+      label: Label avaliacao
+      type: string
+      required: true
+    - name: semNota
+      label: Texto quando não houver nota
+      type: string
+      required: true
+    - name: encTituloDois
+      label: Encerramento — titulo dois
+      type: string
+      required: true
+    - name: encTituloIndividual
+      label: Encerramento — titulo individual
+      type: string
+      required: true
+    - name: encDescDois
+      label: Encerramento — desc dois
+      type: string
+      required: true
+    - name: encDescIndividual
+      label: Encerramento — desc individual
+      type: string
+      required: true
+    - name: encOutro
+      label: Encerramento — outro
+      type: string
+      required: true
+    - name: encVoltarLivro
+      label: Encerramento — voltar livro
+      type: string
+      required: true
+    - name: encSecao
+      label: Encerramento — secao
+      type: string
+      required: true

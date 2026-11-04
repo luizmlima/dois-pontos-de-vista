@@ -1,10 +1,13 @@
+---
+import g from '../data/editorial/geral.json';
+---
 <footer class="rodape-site">
   <div class="container-site rodape-conteudo-site">
-    <a href="/" class="marca-rodape" aria-label="Dois Pontos de Vista — início">
+    <a href="/" class="marca-rodape" aria-label={g.ariaInicio}>
       <img src="/imagens/logo-dois-pontos-de-vista.png" width="92" height="53" alt="" loading="lazy" />
-      <span>dois pontos <small>de vista</small></span>
+      <span>{g.marcaLinha1} <small>{g.marcaLinha2}</small></span>
     </a>
-    <small class="assinatura-rodape">Leituras · Opiniões · Perspectivas</small>
+    <small class="assinatura-rodape">{g.assinatura}</small>
   </div>
 </footer>
 <style>

@@ -1,4 +1,8 @@
 ---
+import t from '../../../data/editorial/opiniao.json';
+import luiz from '../../../data/editorial/luiz.json';
+import heloisa from '../../../data/editorial/heloisa.json';
+import g from '../../../data/editorial/geral.json';
 import '../../../styles/mobile-polish.css';
 import Header from '../../../components/Header.astro';
 import Footer from '../../../components/Footer.astro';
@@ -15,7 +19,7 @@ export function getStaticPaths() {
 const { opiniao, livro } = Astro.props;
 const { Content } = await render(opiniao.entry);
 const nota = opiniao.pessoa === 'ele' ? livro.notaEle : livro.notaEla;
-const notaFormatada = nota === null ? 'Sem nota' : nota.toFixed(1).replace('.', ',') + ' / 5';
+const notaFormatada = nota === null ? t.semNota : nota.toFixed(1).replace('.', ',') + ' / 5';
 const outraPessoa = opiniao.pessoa === 'ele' ? 'ela' : 'ele';
 const outraOpiniao = opinioes.find(o => o.livroId === livro.id && o.pessoa === outraPessoa);
 ---
@@ -23,10 +27,11 @@ const outraOpiniao = opinioes.find(o => o.livroId === livro.id && o.pessoa === o
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
-  <link rel="icon" type="image/png" href="/favicon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content={`${opiniao.titulo}: opinião sobre ${livro.titulo} no Dois Pontos de Vista.`} />
-  <title>{opiniao.titulo} — {livro.titulo} | Dois Pontos de Vista</title>
+  <meta name="description" content={`${opiniao.titulo}: opinião sobre ${livro.titulo} no ${g.tituloSite}.`} />
+  <title>{opiniao.titulo} — {livro.titulo} | {g.tituloSite}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -34,15 +39,14 @@ const outraOpiniao = opinioes.find(o => o.livroId === livro.id && o.pessoa === o
 <body>
   <Header />
   <main id="conteudo-principal" class="container">
-    <div class="voltar"><a data-preservar-origem href={`/livros/${livro.id}`}>← Voltar para {livro.titulo}</a></div>
+    <div class="voltar"><a data-preservar-origem href={`/livros/${livro.id}`}>← {t.voltarLivro} {livro.titulo}</a></div>
     <article class="artigo">
-      <p class="rotulo">PONTO DE VISTA {opiniao.pessoa === 'ele' ? 'DELE' : 'DELA'}</p><p class="assinatura">Por <a href={opiniao.pessoa === 'ele' ? '/autores/luiz-anselmo' : '/autores/heloisa-marques'}>{opiniao.pessoa === 'ele' ? 'Luiz Anselmo' : 'Heloísa Marques'}</a></p>
+      <p class="rotulo">{opiniao.pessoa === 'ele' ? t.rotuloEle : t.rotuloEla}</p><p class="assinatura">{t.por} <a href={opiniao.pessoa === 'ele' ? '/autores/luiz-anselmo' : '/autores/heloisa-marques'}>{opiniao.pessoa === 'ele' ? luiz.nome : heloisa.nome}</a></p>
       <h1>{opiniao.titulo}</h1>
-      <div class="detalhes"><span><b>Livro</b> · <a href={`/livros/${livro.id}`}>{livro.titulo}</a></span><span><b>Leitura</b> · {opiniao.data}</span><span><b>Avaliação</b> · {notaFormatada}</span></div>
-      {opiniao.demonstrativo && <div class="aviso"><strong>Conteúdo de exemplo:</strong> esta opinião ainda é demonstrativa.</div>}
+      <div class="detalhes"><span><b>{t.labelLivro}</b> · <a href={`/livros/${livro.id}`}>{livro.titulo}</a></span><span><b>{t.labelLeitura}</b> · {opiniao.data}</span><span><b>{t.labelAvaliacao}</b> · {notaFormatada}</span></div>
       <div class="texto"><Content /></div>
     </article>
-    <Encerramento compacto titulo={outraOpiniao ? 'Dois olhares, uma história.' : 'Uma história, por enquanto um olhar.'} descricao={outraOpiniao ? 'Conheça outra interpretação desta obra ou retorne à sinopse e às avaliações.' : 'Explore novamente a sinopse, a avaliação e os detalhes desta obra.'} principal={outraOpiniao ? { texto: 'Ler o outro ponto de vista', href: `/livros/${livro.id}/${outraPessoa}`, contexto: 'preservar' } : { texto: 'Voltar à página do livro', href: `/livros/${livro.id}`, contexto: 'preservar' }} secundaria={outraOpiniao ? { texto: 'Voltar à página do livro', href: `/livros/${livro.id}`, contexto: 'preservar' } : undefined} terciaria={{ texto: 'Voltar à seção anterior', href: '/estante', contexto: 'origem' }} />
+    <Encerramento compacto titulo={outraOpiniao ? t.encTituloDois : t.encTituloIndividual} descricao={outraOpiniao ? t.encDescDois : t.encDescIndividual} principal={outraOpiniao ? { texto: t.encOutro, href: `/livros/${livro.id}/${outraPessoa}`, contexto: 'preservar' } : { texto: t.encVoltarLivro, href: `/livros/${livro.id}`, contexto: 'preservar' }} secundaria={outraOpiniao ? { texto: t.encVoltarLivro, href: `/livros/${livro.id}`, contexto: 'preservar' } : undefined} terciaria={{ texto: t.encSecao, href: '/estante', contexto: 'origem' }} />
   </main>
   <Footer />
 <script>import "../../../scripts/contexto-navegacao";</script>

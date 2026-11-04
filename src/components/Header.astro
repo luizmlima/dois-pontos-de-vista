@@ -1,18 +1,19 @@
 ---
+import g from '../data/editorial/geral.json';
 const path = Astro.url.pathname;
 const links = [
-  { href: '/', texto: 'Início' },
-  { href: '/estante', texto: 'Nossa estante' },
-  { href: '/leituras-a-dois', texto: 'Leituras a dois' },
-  { href: '/sobre', texto: 'Sobre nós' },
+  { href: '/', texto: g.navInicio },
+  { href: '/estante', texto: g.navEstante },
+  { href: '/leituras-a-dois', texto: g.navDuplas },
+  { href: '/sobre', texto: g.navSobre },
 ];
 ---
-<a class="pular-conteudo" href="#conteudo-principal">Pular para o conteúdo</a>
+<a class="pular-conteudo" href="#conteudo-principal">{g.pular}</a>
 <header class="cabecalho-site">
   <div class="container-site topo-site">
-    <a href="/" class="marca-site" aria-label="Dois Pontos de Vista, página inicial">
+    <a href="/" class="marca-site" aria-label={g.ariaInicio}>
       <img class="marca-simbolo" src="/imagens/logo-dois-pontos-de-vista.png" width="92" height="53" loading="eager" decoding="async" alt="" aria-hidden="true" />
-      <span>dois pontos <small>de vista</small></span>
+      <span>{g.marcaLinha1} <small>{g.marcaLinha2}</small></span>
     </a>
     <nav class="navegacao-site" aria-label="Navegação principal">
       {links.map(link => (
@@ -22,7 +23,7 @@ const links = [
     <details class="menu-movel">
       <summary aria-label="Abrir ou fechar o menu de navegação">
         <span class="icone-menu" aria-hidden="true"><i></i><i></i><i></i></span>
-        <span>Menu</span>
+        <span>{g.menu}</span>
       </summary>
       <nav class="links-moveis" aria-label="Navegação no celular">
         {links.map(link => (

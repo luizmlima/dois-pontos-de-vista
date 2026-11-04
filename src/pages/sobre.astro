@@ -1,4 +1,8 @@
 ---
+import t from '../data/editorial/sobre.json';
+import g from '../data/editorial/geral.json';
+import luiz from '../data/editorial/luiz.json';
+import heloisa from '../data/editorial/heloisa.json';
 import '../styles/mobile-polish.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
@@ -9,10 +13,11 @@ const foto = '/imagens/luiz-heloisa-sobre.jpg';
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/png" href="/favicon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Conheça Luiz Anselmo e Heloísa Marques e descubra como funciona o Dois Pontos de Vista, um espaço dedicado às leituras e opiniões de dois leitores." />
-  <title>Sobre nós — Dois Pontos de Vista</title>
+  <meta name="description" content={t.descricaoMeta} />
+  <title>{t.tituloAba} — {g.tituloSite}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet" />
@@ -22,45 +27,45 @@ const foto = '/imagens/luiz-heloisa-sobre.jpg';
 <main id="conteudo-principal">
   <section class="apresentacao container">
     <div class="texto-hero">
-      <p class="rotulo">AS PESSOAS POR TRÁS DAS PÁGINAS</p>
-      <h1>Dois leitores.<br/><em>Muitas histórias.</em></h1>
-      <p class="introducao">Somos Luiz Anselmo e Heloísa Marques. Criamos o <strong>Dois Pontos de Vista</strong> para reunir nossas leituras, guardar impressões e compartilhar o que cada livro desperta em nós.</p>
-      <p class="introducao">Nem sempre escolhemos as mesmas obras, e está tudo bem. Aqui, cada um tem liberdade para seguir a própria estante.</p>
-      <a href="#como-funciona" class="link-texto">Entenda o projeto <span aria-hidden="true">↘</span></a>
+      <p class="rotulo">{t.rotulo}</p>
+      <h1>{t.titulo1}<br/><em>{t.titulo2}</em></h1>
+      <p class="introducao">{t.introducao1Antes} <strong>{g.paginaInicial}</strong> {t.introducao1Depois}</p>
+      <p class="introducao">{t.introducao2}</p>
+      <a href="#como-funciona" class="link-texto">{t.botaoEntenda} <span aria-hidden="true">↘</span></a>
     </div>
     <figure class="foto-principal">
       <img src={foto} width="960" height="1280" alt="Luiz Anselmo e Heloísa Marques juntos, sorrindo para uma fotografia" loading="eager" fetchpriority="high" />
-      <figcaption>Luiz &amp; Heloísa <span aria-hidden="true">·</span> Dois pontos de vista</figcaption>
+      <figcaption>{t.legendaFoto}</figcaption>
     </figure>
   </section>
 
   <section class="manifesto">
     <div class="container manifesto-grid">
       <span class="aspas" aria-hidden="true">“</span>
-      <div><p class="rotulo">POR QUE ESTE ESPAÇO EXISTE?</p><h2>Uma forma de guardar o que as histórias <em>deixam em nós.</em></h2><p>Este site é nosso arquivo de leituras e reflexões. Não buscamos chegar sempre à mesma conclusão: o interessante é perceber como cada pessoa encontra algo diferente nas mesmas páginas — ou descobre livros que o outro ainda não conhece.</p></div>
+      <div><p class="rotulo">{t.manifestoRotulo}</p><h2>{t.manifestoTitulo1} <em>{t.manifestoTitulo2}</em></h2><p>{t.manifestoTexto}</p></div>
     </div>
   </section>
 
   <section class="funcionamento container" id="como-funciona">
-    <div class="secao-intro"><p class="rotulo">COMO FUNCIONA</p><h2>Cada leitura tem <em>seu lugar.</em></h2><p>Os livros são o ponto de partida. As opiniões pertencem a quem as escreveu.</p></div>
+    <div class="secao-intro"><p class="rotulo">{t.comoRotulo}</p><h2>{t.comoTitulo1} <em>{t.comoTitulo2}</em></h2><p>{t.comoDescricao}</p></div>
     <div class="etapas">
-      <article><span class="numero">01</span><div class="duas-bolinhas"><i></i></div><h3>Leituras individuais</h3><p>Cada um escolhe seus próprios livros, publica seu texto e registra sua avaliação. Nem toda leitura precisa ser compartilhada.</p></article>
-      <article><span class="numero">02</span><div class="duas-bolinhas"><i></i><i></i></div><h3>Leituras a dois</h3><p>Quando os dois escrevem sobre o mesmo livro — mesmo que em anos diferentes — ele passa a reunir duas perspectivas.</p></article>
-      <article><span class="numero">03</span><div class="icone-livro" aria-hidden="true">↗</div><h3>Opiniões independentes</h3><p>A página do livro apresenta a sinopse e nossas notas. Cada opinião tem um espaço próprio para que você possa ler o texto inteiro.</p></article>
+      <article><span class="numero">01</span><div class="duas-bolinhas"><i></i></div><h3>{t.etapa1Titulo}</h3><p>{t.etapa1Texto}</p></article>
+      <article><span class="numero">02</span><div class="duas-bolinhas"><i></i><i></i></div><h3>{t.etapa2Titulo}</h3><p>{t.etapa2Texto}</p></article>
+      <article><span class="numero">03</span><div class="icone-livro" aria-hidden="true">↗</div><h3>{t.etapa3Titulo}</h3><p>{t.etapa3Texto}</p></article>
     </div>
   </section>
 
   <section class="perfis-secao">
     <div class="container">
-      <div class="secao-intro"><p class="rotulo">QUEM ESCREVE</p><h2>Conheça nossos <em>olhares.</em></h2><p>Dois perfis, biografias próprias e uma estante para cada leitor.</p></div>
+      <div class="secao-intro"><p class="rotulo">{t.perfisRotulo}</p><h2>{t.perfisTitulo1} <em>{t.perfisTitulo2}</em></h2><p>{t.perfisDescricao}</p></div>
       <div class="perfis">
-        <a class="perfil" href="/autores/luiz-anselmo" style="--cor:#53675A"><img src="/imagens/luiz-anselmo.jpg" alt="Retrato de Luiz Anselmo" loading="lazy"/><div><span>O OLHAR DELE</span><h3>Luiz Anselmo</h3><p>Conheça minhas leituras e avaliações.</p><strong>Explorar perfil ↗</strong></div></a>
-        <a class="perfil" href="/autores/heloisa-marques" style="--cor:#884C55"><img src="/imagens/heloisa-marques.jpg" alt="Retrato de Heloísa Marques" loading="lazy"/><div><span>O OLHAR DELA</span><h3>Heloísa Marques</h3><p>Conheça minhas leituras e avaliações.</p><strong>Explorar perfil ↗</strong></div></a>
+        <a class="perfil" href="/autores/luiz-anselmo" style="--cor:#53675A"><img src="/imagens/luiz-anselmo.jpg" alt="Retrato de Luiz Anselmo" loading="lazy"/><div><span>{t.perfilLuizRotulo}</span><h3>{luiz.nome}</h3><p>{t.perfilLuizDescricao}</p><strong>{t.perfilBotao} ↗</strong></div></a>
+        <a class="perfil" href="/autores/heloisa-marques" style="--cor:#884C55"><img src="/imagens/heloisa-marques.jpg" alt="Retrato de Heloísa Marques" loading="lazy"/><div><span>{t.perfilHeloisaRotulo}</span><h3>{heloisa.nome}</h3><p>{t.perfilHeloisaDescricao}</p><strong>{t.perfilBotao} ↗</strong></div></a>
       </div>
     </div>
   </section>
 
-  <Encerramento titulo="Talvez nosso próximo livro também seja o seu." descricao="Continue a história explorando as leituras e opiniões de Luiz e Heloísa." principal={{ texto: 'Visitar nossa estante', href: '/estante' }} secundaria={{ texto: 'Ver leituras a dois', href: '/leituras-a-dois' }} />
+  <Encerramento titulo={t.encTitulo} descricao={t.encDescricao} principal={{ texto: t.encPrincipal, href: '/estante' }} secundaria={{ texto: t.encSecundario, href: '/leituras-a-dois' }} />
 </main>
 <Footer />
 </body>

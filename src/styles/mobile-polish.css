@@ -237,3 +237,74 @@ main :is(.cartao,.card-livro,.perfil,.opiniao){min-width:0}
 /* Capa real: quando informada no Markdown, substitui a capa ilustrativa. */
 main .capa{position:relative;overflow:hidden}
 main .capa-imagem{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:center;background:#f8f3eb;z-index:4;display:block}
+
+
+/* Refinamento estético 2026-11 — mobile-first e sem redesenho.
+   O conteúdo de Leituras a Dois vem antes dos textos explicativos no celular.
+   Preserva a posição original dessas seções no desktop. */
+.leituras.sem-leituras .carrossel-controles,
+.leituras.sem-leituras .carrossel-bolinhas,
+.leituras.sem-leituras .grade-livros{display:none!important}
+.leitura-vazia{padding:32px 24px;text-align:center;border:1px solid #e2d6ca;background:#fffaf3;border-radius:9px;max-width:650px;margin:0 auto}
+.leitura-vazia p{margin:0 0 12px;color:#6a6059;font-size:15px;line-height:1.7}
+.leitura-vazia a{display:inline-block;font-size:13px;font-weight:700;color:#884c55;text-decoration:underline;text-underline-offset:4px}
+.biblioteca.sem-livros .ferramentas,.biblioteca.sem-livros .subbarra,.biblioteca.sem-livros .filtros{display:none!important}
+.biblioteca.sem-livros .vazio{margin-top:12px}
+
+@media(max-width:700px){
+  /* Legibilidade: não diminuir ainda mais os textos que o usuário vai ler. */
+  main .hero-descricao{font-size:15px;line-height:1.73}
+  main .duas-vozes p:not(.sobretitulo),main .sobre p:not(.sobretitulo){font-size:15px;line-height:1.75}
+  main .apresentacao p:not(.rotulo){font-size:15px;line-height:1.68}
+  main .introducao,main .manifesto p:not(.rotulo),main .secao-intro p:not(.rotulo),
+  main .etapas p,main .historia p:not(.rotulo),main .frase + p,
+  main .opiniao p,main .sinopse{font-size:15px;line-height:1.7}
+  main .texto{font-size:16px;line-height:1.8}
+  main .livro-descricao{font-size:13px;line-height:1.6}
+  main .cartao-info .autor{font-size:12.5px;line-height:1.55}
+  main .cartao-info .avaliacoes{font-size:12px;line-height:1.5}
+  main .subbarra p{font-size:12px;line-height:1.4}
+  main .subbarra .nota{display:none}
+  main .card-rodape{font-size:11px;line-height:1.5}
+  main .rotulo,main .sobretitulo{line-height:1.6}
+  /* Tornar filtros confortáveis para toque, mantendo suas proporções. */
+  main .filtros .filtro{min-height:44px;font-size:12px;line-height:1.3}
+  main .busca input{font-size:14px}
+  main .ordenacao select{font-size:13px}
+  main .ferramentas{gap:9px}
+  main .subbarra{padding:11px 0 16px}
+  main .cartao-info{padding-top:15px}
+  main .etapas{gap:11px}
+  main .etapas article{padding-top:21px;padding-bottom:10px}
+  main .secao-intro{margin-bottom:27px}
+  main .encerramento-padrao .descricao-padrao{font-size:14px;line-height:1.7}
+  .leitura-vazia{padding:24px 18px}
+
+  /* Leituras a Dois: o primeiro livro aparece logo depois da introdução;
+     os dois cartões conceituais passam para depois da listagem. */
+  main#conteudo-principal:has(> .manifesto.container){display:flex;flex-direction:column}
+  main#conteudo-principal:has(> .manifesto.container) > .apresentacao{order:0;padding-top:28px!important;padding-bottom:14px!important}
+  main#conteudo-principal:has(> .manifesto.container) > .biblioteca{order:1;padding-top:5px!important;padding-bottom:36px!important}
+  main#conteudo-principal:has(> .manifesto.container) > .manifesto{order:2;padding-top:16px!important;padding-bottom:37px!important}
+  main#conteudo-principal:has(> .manifesto.container) > .encerramento-padrao{order:3}
+  main#conteudo-principal:has(> .manifesto.container) > .apresentacao h1{margin:12px 0 12px!important;line-height:1.14}
+  main#conteudo-principal:has(> .manifesto.container) > .apresentacao p{max-width:40ch!important}
+  main#conteudo-principal:has(> .manifesto.container) > .apresentacao .numeros{margin-top:14px!important}
+  main#conteudo-principal:has(> .manifesto.container) .manifesto{gap:11px}
+  main#conteudo-principal:has(> .manifesto.container) .manifesto-item{padding:18px 20px}
+  main#conteudo-principal:has(> .manifesto.container) .manifesto-item h2{font-size:22px;line-height:1.25;margin:7px 0}
+  main#conteudo-principal:has(> .manifesto.container) .manifesto-item p{font-size:14px;line-height:1.65}
+  /* Estante: apresentação mais próxima da busca sem sacrificar os títulos. */
+  main#conteudo-principal:has(> .biblioteca):not(:has(> .manifesto.container)) > .apresentacao{padding-top:29px!important;padding-bottom:20px!important}
+  main#conteudo-principal:has(> .biblioteca):not(:has(> .manifesto.container)) > .apresentacao h1{margin:13px 0!important}
+  main#conteudo-principal:has(> .biblioteca):not(:has(> .manifesto.container)) > .apresentacao .numeros{margin-top:15px!important}
+  main#conteudo-principal:has(> .biblioteca):not(:has(> .manifesto.container)) > .biblioteca{padding-top:8px!important}
+  /* Perfis: reduzir um pouco a distância até a própria estante. */
+  main .historia{padding-top:40px;padding-bottom:42px}
+  main .leituras:not(.sem-leituras){scroll-margin-top:12px}
+}
+@media(max-width:380px){
+  main .hero-descricao,main .apresentacao p:not(.rotulo){font-size:15px}
+  main .rotulo{letter-spacing:1.15px}
+  main .avaliacoes{gap:7px}
+}
