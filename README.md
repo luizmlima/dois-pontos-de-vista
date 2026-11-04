@@ -6,11 +6,10 @@
   **Duas perspectivas. Infinitas histórias.**
 
   Um espaço literário criado por **Luiz Anselmo** e **Heloísa Marques** para guardar leituras, avaliações e reflexões. As vezes sobre os mesmos livros, as vezes sobre histórias completamente diferentes.
+  #### [Link para o site](https://dois-pontos-de-vista.pages.dev/)
 </div>
 
 ---
-
-## [Link para o site](https://dois-pontos-de-vista.pages.dev/)
 
 ## Sobre o projeto
 
