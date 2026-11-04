@@ -60,6 +60,16 @@ content:
   - name: iniciais
     label: Iniciais para capa alternativa
     type: string
+  - name: planejadoEle
+    label: Luiz pretende ler
+    type: boolean
+    default: false
+    description: Aparece em Próximas leituras enquanto Luiz não tiver opinião publicada.
+  - name: planejadoEla
+    label: Heloísa pretende ler
+    type: boolean
+    default: false
+    description: Aparece em Próximas leituras enquanto Heloísa não tiver opinião publicada.
   - name: publicado
     label: Livro liberado para publicação
     type: boolean
@@ -154,6 +164,118 @@ content:
   label: Textos do site
   type: group
   items:
+  - name: editorial-futuras
+    label: Página Próximas leituras — textos e filtros
+    type: file
+    path: src/data/editorial/futuras.json
+    format: json
+    operations:
+      delete: false
+    fields:
+    - name: tituloAba
+      label: tituloAba
+      type: string
+      required: true
+    - name: descricaoMeta
+      label: descricaoMeta
+      type: text
+      required: true
+    - name: rotulo
+      label: rotulo
+      type: string
+      required: true
+    - name: titulo1
+      label: titulo1
+      type: string
+      required: true
+    - name: titulo2
+      label: titulo2
+      type: string
+      required: true
+    - name: descricao
+      label: descricao
+      type: text
+      required: true
+    - name: filtroTodos
+      label: filtroTodos
+      type: string
+      required: true
+    - name: filtroEle
+      label: filtroEle
+      type: string
+      required: true
+    - name: filtroEla
+      label: filtroEla
+      type: string
+      required: true
+    - name: busca
+      label: busca
+      type: string
+      required: true
+    - name: exibindo
+      label: exibindo
+      type: string
+      required: true
+    - name: livroSingular
+      label: livroSingular
+      type: string
+      required: true
+    - name: livroPlural
+      label: livroPlural
+      type: string
+      required: true
+    - name: vazioTitulo
+      label: vazioTitulo
+      type: string
+      required: true
+    - name: vazioDescricao
+      label: vazioDescricao
+      type: text
+      required: true
+    - name: vazioBuscaTitulo
+      label: vazioBuscaTitulo
+      type: string
+      required: true
+    - name: vazioBuscaDescricao
+      label: vazioBuscaDescricao
+      type: string
+      required: true
+    - name: luizQuerLer
+      label: luizQuerLer
+      type: string
+      required: true
+    - name: heloisaQuerLer
+      label: heloisaQuerLer
+      type: string
+      required: true
+    - name: ambosQueremLer
+      label: ambosQueremLer
+      type: string
+      required: true
+    - name: verLivro
+      label: verLivro
+      type: string
+      required: true
+    - name: aindaNaoLido
+      label: aindaNaoLido
+      type: string
+      required: true
+    - name: encTitulo
+      label: encTitulo
+      type: string
+      required: true
+    - name: encDescricao
+      label: encDescricao
+      type: text
+      required: true
+    - name: encPrincipal
+      label: encPrincipal
+      type: string
+      required: true
+    - name: encSecundario
+      label: encSecundario
+      type: string
+      required: true
   - name: editorial-geral
     label: Identidade, menu e textos globais
     type: file
@@ -182,8 +304,24 @@ content:
       label: Menu — duplas
       type: string
       required: true
+    - name: navFuturas
+      label: Navegação — próximas leituras
+      type: string
+      required: true
+    - name: perfisMenu
+      label: Título da seção de perfis (menu celular)
+      type: string
+      required: true
+    - name: ariaPerfilLuiz
+      label: Acessibilidade — perfil de Luiz
+      type: string
+      required: true
+    - name: ariaPerfilHeloisa
+      label: Acessibilidade — perfil de Heloísa
+      type: string
+      required: true
     - name: navSobre
-      label: Menu — sobre
+      label: Menu — Nossa história
       type: string
       required: true
     - name: menu
@@ -866,6 +1004,26 @@ content:
     operations:
       delete: false
     fields:
+    - name: futurasRotulo
+      label: Rótulo — próximas leituras no perfil
+      type: string
+      required: true
+    - name: futurasTitulo
+      label: Título — próximas leituras no perfil
+      type: string
+      required: true
+    - name: futurasDescricao
+      label: Descrição — próximas leituras no perfil
+      type: text
+      required: true
+    - name: futurasVerTodas
+      label: Botão — ver lista completa
+      type: string
+      required: true
+    - name: futurasVazio
+      label: Mensagem — sem livros futuros
+      type: string
+      required: true
     - name: linkLeituras
       label: Link — leituras
       type: string

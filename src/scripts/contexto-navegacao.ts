@@ -3,6 +3,7 @@ const origem = new URLSearchParams(window.location.search).get('origem');
 const destinos: Record<string, {href:string, label:string}> = {
   'leituras-a-dois': {href:'/leituras-a-dois',label:'← Voltar às Leituras a Dois'},
   'estante': {href:'/estante',label:'← Voltar à Nossa Estante'},
+  'proximas-leituras': {href:'/proximas-leituras',label:'← Voltar às Próximas Leituras'},
   'inicio': {href:'/',label:'← Voltar ao Início'},
 };
 const destino = origem && destinos[origem] ? destinos[origem] : destinos.estante;

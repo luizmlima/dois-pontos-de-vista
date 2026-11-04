@@ -1,4 +1,5 @@
 ---
+import SEO from '../../../components/SEO.astro';
 import t from '../../../data/editorial/opiniao.json';
 import luiz from '../../../data/editorial/luiz.json';
 import heloisa from '../../../data/editorial/heloisa.json';
@@ -7,6 +8,7 @@ import '../../../styles/mobile-polish.css';
 import Header from '../../../components/Header.astro';
 import Footer from '../../../components/Footer.astro';
 import Encerramento from '../../../components/Encerramento.astro';
+import Compartilhar from '../../../components/Compartilhar.astro';
 import { livros, opinioes } from '../../../data/livros';
 import { render } from 'astro:content';
 
@@ -32,6 +34,7 @@ const outraOpiniao = opinioes.find(o => o.livroId === livro.id && o.pessoa === o
     <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content={`${opiniao.titulo}: opinião sobre ${livro.titulo} no ${g.tituloSite}.`} />
   <title>{opiniao.titulo} — {livro.titulo} | {g.tituloSite}</title>
+  <SEO title={`${opiniao.titulo} — ${livro.titulo} | ${g.tituloSite}`} description={`${opiniao.resumo} — ${opiniao.pessoa === 'ele' ? 'Luiz Anselmo' : 'Heloísa Marques'} avaliou com ${opiniao.nota === null ? 'sem nota' : opiniao.nota.toFixed(1).replace('.',',')+'/5'}.`} image={`/compartilhar/opinioes/${livro.id}/${opiniao.pessoa}.png`} type="article" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -44,6 +47,7 @@ const outraOpiniao = opinioes.find(o => o.livroId === livro.id && o.pessoa === o
       <p class="rotulo">{opiniao.pessoa === 'ele' ? t.rotuloEle : t.rotuloEla}</p><p class="assinatura">{t.por} <a href={opiniao.pessoa === 'ele' ? '/autores/luiz-anselmo' : '/autores/heloisa-marques'}>{opiniao.pessoa === 'ele' ? luiz.nome : heloisa.nome}</a></p>
       <h1>{opiniao.titulo}</h1>
       <div class="detalhes"><span><b>{t.labelLivro}</b> · <a href={`/livros/${livro.id}`}>{livro.titulo}</a></span><span><b>{t.labelLeitura}</b> · {opiniao.data}</span><span><b>{t.labelAvaliacao}</b> · {notaFormatada}</span></div>
+      <div class="acao-compartilhar"><Compartilhar texto="Compartilhar esta opinião" titulo={`${opiniao.titulo} — ${livro.titulo}`} descricao={`${opiniao.pessoa === 'ele' ? 'Luiz' : 'Heloísa'} avaliou ${livro.titulo} com ${nota === null ? 'sem nota' : nota.toFixed(1).replace('.', ',')+'/5'}.`} /></div>
       <div class="texto"><Content /></div>
     </article>
     <Encerramento compacto titulo={outraOpiniao ? t.encTituloDois : t.encTituloIndividual} descricao={outraOpiniao ? t.encDescDois : t.encDescIndividual} principal={outraOpiniao ? { texto: t.encOutro, href: `/livros/${livro.id}/${outraPessoa}`, contexto: 'preservar' } : { texto: t.encVoltarLivro, href: `/livros/${livro.id}`, contexto: 'preservar' }} secundaria={outraOpiniao ? { texto: t.encVoltarLivro, href: `/livros/${livro.id}`, contexto: 'preservar' } : undefined} terciaria={{ texto: t.encSecao, href: '/estante', contexto: 'origem' }} />
@@ -74,3 +78,5 @@ const outraOpiniao = opinioes.find(o => o.livroId === livro.id && o.pessoa === o
   .outra .voltar-origem{margin:22px 0 0;font-size:13px}
   .outra .voltar-origem a{border:0;padding:8px;text-underline-offset:4px;text-decoration:underline}
 </style>
+
+<style>.acao-compartilhar{margin:26px 0 35px}</style>

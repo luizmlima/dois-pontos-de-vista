@@ -1,0 +1,45 @@
+---
+interface Props { texto?: string; titulo: string; descricao?: string; }
+const { texto='Compartilhar', titulo, descricao='' } = Astro.props;
+const site = Astro.site ?? new URL('https://dois-pontos-de-vista.pages.dev');
+const url = new URL(Astro.url.pathname, site).href;
+---
+<div class="compartilhar-wrap">
+  <button class="compartilhar-btn" type="button" data-compartilhar data-url={url} data-titulo={titulo} data-descricao={descricao} aria-label={texto}>
+    <svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.7 10.8 15.3 6.5M8.7 13.3l6.6 4.2"/></svg>
+    <span>{texto}</span>
+  </button>
+  <span class="compartilhar-msg" role="status" aria-live="polite"></span>
+</div>
+<style>
+  .compartilhar-wrap{display:inline-flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .compartilhar-btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:10px 14px;min-height:44px;background:transparent;border:1px solid #bfa8a1;border-radius:6px;font:700 12px 'DM Sans',sans-serif;color:#884C55;cursor:pointer;transition:background .2s ease}
+  .compartilhar-btn:hover{background:#efe2db}.compartilhar-btn:focus-visible{outline:2px solid #884C55;outline-offset:3px}
+  .compartilhar-msg{font:500 12px 'DM Sans',sans-serif;color:#53675A}
+</style>
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-compartilhar]').forEach((botao)=>{
+    botao.addEventListener('click', async ()=>{
+      const url=botao.dataset.url||location.href;
+      const title=botao.dataset.titulo||document.title;
+      const text=botao.dataset.descricao||'';
+      const mensagem=botao.parentElement?.querySelector<HTMLElement>('.compartilhar-msg');
+      try {
+        if(navigator.share){
+          await navigator.share({title,text,url});
+          if(mensagem) mensagem.textContent='';
+          return;
+        }
+        if(navigator.clipboard?.writeText){
+          await navigator.clipboard.writeText(url);
+          if(mensagem) mensagem.textContent='Link copiado!';
+          return;
+        }
+        window.prompt('Copie o endereço para compartilhar:',url);
+      } catch (e) {
+        if (e instanceof DOMException && e.name === 'AbortError') return;
+        window.prompt('Copie o endereço para compartilhar:',url);
+      }
+    });
+  });
+</script>

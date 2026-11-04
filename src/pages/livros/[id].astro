@@ -1,10 +1,12 @@
 ---
+import SEO from '../../components/SEO.astro';
 import t from '../../data/editorial/livro.json';
 import g from '../../data/editorial/geral.json';
 import '../../styles/mobile-polish.css';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import Encerramento from '../../components/Encerramento.astro';
+import Compartilhar from '../../components/Compartilhar.astro';
 import { livros, sinopses, opinioes } from '../../data/livros';
 
 export function getStaticPaths() {
@@ -26,6 +28,7 @@ const opinioesDoLivro = opinioes.filter(o => o.livroId === livro.id);
     <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content={`Opiniões e avaliações sobre ${livro.titulo}, de ${livro.autor}, no ${g.tituloSite}.`} />
   <title>{livro.titulo} — {g.tituloSite}</title>
+  <SEO title={`${livro.titulo} — ${g.tituloSite}`} description={`Opiniões e avaliações de ${livro.titulo}, por ${livro.autor}.`} image={`/compartilhar/livros/${livro.id}.png`} type="article" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -40,6 +43,7 @@ const opinioesDoLivro = opinioes.filter(o => o.livroId === livro.id);
       <span class:list={['selo', dupla ? 'dupla' : 'solo']}>{dupla ? `● ● ${t.leituraDois}` : livro.leitores.includes('ele') ? `● ${t.leituraEle}` : `● ${t.leituraEla}`}</span>
       <p class="sinopse">{sinopses[livro.id]}</p>
       <div class="notas">{livro.notaEle !== null && <div><span class="ponto verde">●</span><span>{t.notaEle}</span><strong>{formatoNota(livro.notaEle)}</strong></div>}{livro.notaEla !== null && <div><span class="ponto vinho">●</span><span>{t.notaEla}</span><strong>{formatoNota(livro.notaEla)}</strong></div>}</div>
+      <div class="acao-compartilhar"><Compartilhar texto="Compartilhar livro" titulo={`${livro.titulo} — ${g.tituloSite}`} descricao={`Leia as opiniões sobre ${livro.titulo}.`} /></div>
     </div>
   </section>
   <section class="opiniao-secao" aria-label="Opiniões sobre o livro">
@@ -73,3 +77,5 @@ const opinioesDoLivro = opinioes.filter(o => o.livroId === livro.id);
   .destinos-finais{display:flex;justify-content:center;align-items:center;gap:14px 24px;flex-wrap:wrap}
   @media(max-width:610px){.navega-voltar{margin:20px 0}.navega-voltar a{font-size:12px}.destinos-finais{flex-direction:column;gap:8px}}
 </style>
+
+<style>.acao-compartilhar{margin-top:21px;display:flex;justify-content:flex-start}@media(max-width:850px){.acao-compartilhar{justify-content:center}}</style>

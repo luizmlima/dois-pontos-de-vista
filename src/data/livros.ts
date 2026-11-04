@@ -6,6 +6,7 @@ export type Livro = {
   id: string; titulo: string; autor: string; genero: string; ano: string;
   cor: string; iniciais: string; capa?: string; leitores: Pessoa[];
   notaEle: number | null; notaEla: number | null; demonstrativo: boolean;
+  planejadoEle: boolean; planejadoEla: boolean;
 };
 export type Opiniao = {
   livroId: string; pessoa: Pessoa; titulo: string; data: string;
@@ -29,8 +30,7 @@ export const opinioes: Opiniao[] = opinioesFonte.map(o => ({
   dataPublicacao: o.data.dataPublicacao, resumo: o.data.resumo,
   nota: o.data.nota ?? null, demonstrativo: o.data.demonstrativo, entry: o
 }));
-export const livros: Livro[] = livrosFonte
-  .filter(l => opinioes.some(o => o.livroId === l.id)) // Estante pública requer ao menos uma opinião.
+export const catalogo: Livro[] = livrosFonte
   .map(l => {
     const lista = opinioes.filter(o => o.livroId === l.id);
     return { id: l.id, titulo: l.data.titulo, autor: l.data.autor,
@@ -39,9 +39,25 @@ export const livros: Livro[] = livrosFonte
       leitores: lista.map(o => o.pessoa),
       notaEle: lista.find(o => o.pessoa === 'ele')?.nota ?? null,
       notaEla: lista.find(o => o.pessoa === 'ela')?.nota ?? null,
-      demonstrativo: l.data.demonstrativo || lista.some(o=>o.demonstrativo)
+      demonstrativo: l.data.demonstrativo || lista.some(o=>o.demonstrativo),
+      planejadoEle: l.data.planejadoEle ?? false,
+      planejadoEla: l.data.planejadoEla ?? false
     };
   });
+/** Livros avaliados: só aparecem na Estante quando uma opinião está publicada. */
+export const livros = catalogo.filter(l => l.leitores.length > 0);
+
+/** Um livro pode estar nas duas listas; sai da lista de cada pessoa após a opinião dela. */
+export const futuras = catalogo
+  .map(l => ({...l,
+    interesses: [
+      ...(l.planejadoEle && !l.leitores.includes('ele') ? ['ele' as const] : []),
+      ...(l.planejadoEla && !l.leitores.includes('ela') ? ['ela' as const] : []),
+    ],
+  }))
+  .filter(l => l.interesses.length > 0)
+  .sort((a,b) => a.titulo.localeCompare(b.titulo,'pt-BR'));
+
 export const sinopses: Record<string,string> = Object.fromEntries(livrosFonte.map(l => [l.id, l.data.sinopse]));
 /** Cada livro aparece uma única vez, ordenado pela opinião mais recentemente publicada. */
 export const ultimasLeituras = (() => {

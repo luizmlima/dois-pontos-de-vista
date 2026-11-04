@@ -1,0 +1,110 @@
+---
+import '../styles/mobile-polish.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Encerramento from '../components/Encerramento.astro';
+import SEO from '../components/SEO.astro';
+import { futuras } from '../data/livros';
+import t from '../data/editorial/futuras.json';
+import g from '../data/editorial/geral.json';
+---
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2" />
+  <meta name="description" content={t.descricaoMeta} />
+  <title>{t.tituloAba} — {g.tituloSite}</title>
+  <SEO title={`${t.tituloAba} — ${g.tituloSite}`} description={t.descricaoMeta} />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <Header />
+  <main id="conteudo-principal">
+    <section class="cabeca container">
+      <p class="rotulo"><span class="traco"></span>{t.rotulo}</p>
+      <h1>{t.titulo1} <em>{t.titulo2}</em></h1>
+      <p class="introducao">{t.descricao}</p>
+      <div class="contagem-cabeca">
+        <span class="contagem-total">{futuras.length} {futuras.length === 1 ? t.livroSingular : t.livroPlural}</span>
+      </div>
+    </section>
+    <section class="lista container" aria-label={t.tituloAba}>
+      <div class="ferramentas">
+        <label class="busca"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.7" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m16 16 5 5" stroke="currentColor" stroke-width="1.8"/></svg><input id="busca-futura" type="search" placeholder={t.busca} aria-label={t.busca}/></label>
+        <div class="filtros" role="group" aria-label="Filtrar próximas leituras">
+          <button type="button" class="filtro ativo" aria-pressed="true" data-leitor="todos">{t.filtroTodos}</button>
+          <button type="button" class="filtro" aria-pressed="false" data-leitor="ele">{t.filtroEle}</button>
+          <button type="button" class="filtro" aria-pressed="false" data-leitor="ela">{t.filtroEla}</button>
+        </div>
+      </div>
+      <p class="contagem-filtro" id="resumo-futuras" aria-live="polite" data-prefixo={t.exibindo} data-singular={t.livroSingular} data-plural={t.livroPlural}>{t.exibindo} {futuras.length} {futuras.length === 1 ? t.livroSingular : t.livroPlural}</p>
+      <div class="grade" id="grade-futuras">
+        {futuras.map((livro) => (
+          <article class="cartao" data-titulo={livro.titulo} data-autor={livro.autor} data-leitores={livro.interesses.join(',')}>
+            <div class="capa" style={`--cor-capa:${livro.cor}`}>
+              {livro.capa && <img src={livro.capa} alt="" loading="lazy" class="capa-imagem" onerror="this.remove()" />}
+              <span class="marca-capa">{g.rotuloCapa}</span><strong>{livro.titulo}</strong><small>{livro.autor}</small>
+            </div>
+            <div class="dados">
+              <p class="selo"><span class="ponto-verde">●</span> {livro.interesses.includes('ele') ? t.filtroEle : ''}{livro.interesses.length === 2 ? ' · ' : ''}{livro.interesses.includes('ela') ? t.filtroEla : ''}</p>
+              <h2>{livro.titulo}</h2><p class="autor">{livro.autor}</p>
+              <p class="descricao-plano">{livro.interesses.length === 2 ? t.ambosQueremLer : livro.interesses[0] === 'ele' ? t.luizQuerLer : t.heloisaQuerLer}</p>
+              {livro.leitores.length > 0 ? <a class="link-livro" href={`/livros/${livro.id}?origem=proximas-leituras`}>{t.verLivro} ↗</a> : <span class="sem-link">{t.aindaNaoLido}</span>}
+            </div>
+          </article>
+        ))}
+      </div>
+      <div class="vazio" id="vazio-futuras" hidden>
+        <h2>{futuras.length === 0 ? t.vazioTitulo : t.vazioBuscaTitulo}</h2>
+        <p>{futuras.length === 0 ? t.vazioDescricao : t.vazioBuscaDescricao}</p>
+      </div>
+    </section>
+    <Encerramento titulo={t.encTitulo} descricao={t.encDescricao} principal={{texto:t.encPrincipal,href:'/estante'}} secundaria={{texto:t.encSecundario,href:'/'}} />
+  </main>
+  <Footer />
+  <script>
+    const botoes = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-leitor]'));
+    const cards = Array.from(document.querySelectorAll<HTMLElement>('#grade-futuras .cartao'));
+    const busca = document.querySelector<HTMLInputElement>('#busca-futura');
+    const contagem = document.querySelector<HTMLElement>('#resumo-futuras');
+    const vazio = document.querySelector<HTMLElement>('#vazio-futuras');
+    const normalizar = (s: string) => s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+    let filtro = new URLSearchParams(location.search).get('leitor') || 'todos';
+    if(!['todos','ele','ela'].includes(filtro)) filtro='todos';
+    function atualizar(){
+      botoes.forEach(b => { const ativo=b.dataset.leitor===filtro; b.classList.toggle('ativo',ativo); b.setAttribute('aria-pressed',String(ativo)); });
+      const termo = normalizar(busca?.value.trim()||'');
+      let visiveis=0;
+      cards.forEach(card => {const leitores=(card.dataset.leitores||'').split(','); const mostrar=(filtro==='todos'||leitores.includes(filtro)) && normalizar(`${card.dataset.titulo} ${card.dataset.autor}`).includes(termo); card.hidden=!mostrar;if(mostrar) visiveis++;});
+      if(contagem) contagem.textContent=`${contagem.dataset.prefixo} ${visiveis} ${visiveis===1?contagem.dataset.singular:contagem.dataset.plural}`;
+      if(vazio) vazio.hidden=visiveis!==0;
+    }
+    botoes.forEach(b=>b.addEventListener('click',()=>{
+      filtro=b.dataset.leitor||'todos';
+      const url=new URL(location.href);if(filtro==='todos') url.searchParams.delete('leitor');else url.searchParams.set('leitor',filtro);
+      history.replaceState(null,'',url);atualizar();
+    }));
+    busca?.addEventListener('input',atualizar);
+    atualizar();
+  </script>
+</body>
+</html>
+<style>
+  :global(*){box-sizing:border-box}:global(body){margin:0;color:#312E2B;background:#F5F0E8;font-family:'DM Sans',sans-serif;-webkit-font-smoothing:antialiased}:global(a){color:inherit;text-decoration:none}
+  .container{width:min(1120px,calc(100% - 48px));margin-inline:auto}
+  .cabeca{padding:72px 0 38px;text-align:center}.rotulo{font-size:11px;font-weight:700;letter-spacing:2px;color:#884C55;margin:0 0 19px}.traco{display:inline-block;width:26px;height:1px;background:#884C55;vertical-align:middle;margin-right:12px}
+  h1,h2{font-family:'Playfair Display',Georgia,serif;font-weight:500}.cabeca h1{font-size:clamp(36px,5vw,60px);line-height:1.2;margin:0 0 16px}.cabeca h1 em{color:#884C55;font-weight:400}.introducao{font-size:15px;color:#6d645c;line-height:1.8;max-width:700px;margin:0 auto 17px}
+  .contagem-cabeca{display:flex;align-items:center;justify-content:center}.contagem-total{font-size:12px;color:#7c7066}
+  .lista{padding:15px 0 80px}.ferramentas{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:15px;padding:17px 0 7px;border-top:1px solid #e2d7c9}
+  .busca{display:flex;align-items:center;gap:10px;padding:0 15px;border:1px solid #dfd2c2;border-radius:7px;background:#fffaf3;color:#817365;flex:1;max-width:450px;min-width:220px;min-height:48px}.busca input{width:100%;border:0;background:transparent;outline:0;font-size:14px;color:#312E2B}.busca:focus-within{outline:2px solid #884C55;outline-offset:2px}
+  .filtros{display:flex;gap:7px}.filtro{background:transparent;border:1px solid #dbd0c1;color:#77695e;border-radius:6px;padding:10px 16px;min-height:44px;font:600 13px 'DM Sans',sans-serif;cursor:pointer}.filtro.ativo{background:#884C55;color:white;border-color:#884C55}.filtro:focus-visible{outline:2px solid #884C55;outline-offset:3px}
+  .contagem-filtro{font-size:12px;color:#87786e;margin:20px 0 17px}.grade{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:25px}.cartao{background:#fff;border:1px solid #e8ddd1;overflow:hidden;display:flex;flex-direction:column}.cartao[hidden]{display:none}
+  .capa{height:275px;background:var(--cor-capa);position:relative;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:14px;text-align:center;color:#fbf5ed;padding:28px 35px;overflow:hidden}.capa::after{content:'';position:absolute;inset:13px;border:1px solid #ffffff5c;pointer-events:none}.capa-imagem{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#f6f1ea;z-index:2}.capa strong{font:500 28px/1.23 'Playfair Display',serif}.capa small{font-size:11px;letter-spacing:1px}.marca-capa{font-size:9px;letter-spacing:2px}.dados{padding:22px 24px 25px;flex:1;display:flex;flex-direction:column}.selo{font-size:11px;color:#884C55;font-weight:700;letter-spacing:.7px;margin:0 0 8px}.ponto-verde{color:#53675A}.dados h2{font-size:24px;line-height:1.32;margin:0 0 5px}.autor{color:#8a796c;font-size:12px;margin:0 0 13px}.descricao-plano{color:#73685c;font-size:13px;margin:0 0 20px;line-height:1.65}.link-livro,.sem-link{font:700 12px 'DM Sans',sans-serif;color:#884C55;margin-top:auto;padding-top:14px;border-top:1px solid #eee6dc}.sem-link{font-weight:500;color:#958579}.vazio{text-align:center;padding:50px 16px}.vazio[hidden]{display:none}.vazio h2{font-size:28px}.vazio p{color:#766d63;font-size:14px}
+  @media(max-width:870px){.grade{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media(max-width:610px){.container{width:calc(100% - 36px)}.cabeca{padding:42px 0 23px}.cabeca h1{font-size:clamp(33px,8vw,43px)}.introducao{font-size:15px;line-height:1.7}.lista{padding:0 0 55px}.ferramentas{align-items:stretch;gap:10px}.busca{max-width:none;flex-basis:100%}.filtros{width:100%;display:grid;grid-template-columns:repeat(3,1fr)}.filtro{padding:10px 5px;font-size:12px}.grade{grid-template-columns:1fr;gap:17px}.capa{height:250px}.dados{padding:18px 21px 24px}}
+</style>

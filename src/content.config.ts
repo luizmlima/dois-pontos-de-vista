@@ -13,6 +13,8 @@ const livros = defineCollection({
     cor: z.string().default('#53675A'),
     iniciais: z.string().optional(),
     capa: z.string().optional(),
+    planejadoEle: z.boolean().default(false),
+    planejadoEla: z.boolean().default(false),
     publicado: z.boolean().default(false),
     demonstrativo: z.boolean().default(false),
   }),

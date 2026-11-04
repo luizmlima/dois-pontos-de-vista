@@ -1,4 +1,5 @@
 ---
+import SEO from '../components/SEO.astro';
 import t from '../data/editorial/estante.json';
 import g from '../data/editorial/geral.json';
 import '../styles/mobile-polish.css';
@@ -16,6 +17,7 @@ import { livros } from '../data/livros';
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={t.descricaoMeta} />
     <title>{t.tituloAba} — {g.tituloSite}</title>
+  <SEO title={`${t.tituloAba} — ${g.tituloSite}`} description={t.descricaoMeta} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet" />

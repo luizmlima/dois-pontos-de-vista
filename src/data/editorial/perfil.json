@@ -19,5 +19,10 @@
   "tituloOutro2": "dois olhares.",
   "descricaoOutroAntes": "Descubra também as leituras e opiniões de",
   "linkOutro": "Conhecer",
-  "estanteVazia": "As leituras e opiniões aparecerão aqui à medida que forem publicadas."
+  "estanteVazia": "As leituras e opiniões aparecerão aqui à medida que forem publicadas.",
+  "futurasRotulo": "NA MINHA LISTA",
+  "futurasTitulo": "Quero ler",
+  "futurasDescricao": "Livros que pretendo encontrar nas próximas páginas.",
+  "futurasVerTodas": "Ver todas as próximas leituras",
+  "futurasVazio": "Ainda não adicionei livros à minha lista."
 }
