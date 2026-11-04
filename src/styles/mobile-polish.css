@@ -308,3 +308,14 @@ main .capa-imagem{position:absolute;inset:0;width:100%;height:100%;object-fit:co
   main .rotulo{letter-spacing:1.15px}
   main .avaliacoes{gap:7px}
 }
+
+/* DPV DESKTOP SCALE START — escala fiel ao zoom de navegador de 120%
+   Remove as regras antigas que ampliavam o titulo sem ampliar sua coluna.
+   'zoom' participa do calculo de layout (diferente de transform: scale).
+   Nao altera a experiencia mobile ou de tablets. */
+@media (min-width: 1360px) {
+  body {
+    zoom: 1.2;
+  }
+}
+/* DPV DESKTOP SCALE END */
