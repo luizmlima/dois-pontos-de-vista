@@ -48,7 +48,13 @@ const outro = pessoas.find(p=>p.slug!==perfil.slug)!;
 <main id="conteudo-principal">
 <section class="hero container">
 <div class="retrato"><img src={perfil.foto} alt={`Retrato de ${perfil.nome}`} width="640" height="640" loading="eager"/></div>
-<div class="apresentacao"><p class="rotulo">{perfil.titulo.toUpperCase()}</p><h1>{perfil.nome}</h1><div class="frase">“{perfil.frase}”</div><p class="texto">{perfil.descricao}</p><a class="link" href="#minhas-leituras">{t.linkLeituras} <span aria-hidden="true">↘</span></a></div>
+<div class="apresentacao"><p class="rotulo">{perfil.titulo.toUpperCase()}</p><h1>{perfil.nome}</h1><div class="frase">“{perfil.frase}”</div><div class="texto texto-paragrafos">
+  {perfil.descricao
+    .split(/\r?\n\s*\r?\n/)
+    .map((paragrafo: string) => paragrafo.trim())
+    .filter(Boolean)
+    .map((paragrafo: string) => <p>{paragrafo}</p>)}
+</div><a class="link" href="#minhas-leituras">{t.linkLeituras} <span aria-hidden="true">↘</span></a></div>
 </section>
 <section class="numeros"><div class="container estatisticas"><div><strong>{meusLivros.length}</strong><span>{t.estatLivros}</span></div><div><strong>{media}</strong><span>{t.estatMedia}</span></div><div><strong>{duplas}</strong><span>{t.estatDuplas}</span></div></div></section>
 <section class="container historia"><div><p class="rotulo">{t.rotuloHistoria}</p><h2>{t.tituloHistoria1} <em>{t.tituloHistoria2}</em></h2></div><div>{perfil.biografia.split(/\n\s*\n/).filter(Boolean).map(paragrafo => <p>{paragrafo}</p>)}</div></section>
@@ -81,4 +87,9 @@ const outro = pessoas.find(p=>p.slug!==perfil.slug)!;
   .futuro-livro p{font-size:13px;color:#83786e;margin:0 0 12px}.futuro-livro a{font-size:12px;color:var(--destaque);font-weight:700}
   @media(max-width:800px){.futuras-grade{grid-template-columns:repeat(2,minmax(0,1fr))}}
   @media(max-width:610px){.futuras-perfil{padding:46px 0 55px}.futuras-topo{align-items:start;flex-direction:column;gap:10px}.futuras-grade{grid-template-columns:1fr}.futuro-livro{min-height:0}}
+</style>
+
+<style>
+  .texto-paragrafos > p { margin: 0 0 18px; }
+  .texto-paragrafos > p:last-child { margin-bottom: 0; }
 </style>
