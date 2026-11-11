@@ -93,3 +93,49 @@ const outro = pessoas.find(p=>p.slug!==perfil.slug)!;
   .texto-paragrafos > p { margin: 0 0 18px; }
   .texto-paragrafos > p:last-child { margin-bottom: 0; }
 </style>
+
+<style>
+/* Refinamento de legibilidade dos perfis apenas em celulares.
+   Não altera o desktop, os dados do CMS nem as demais páginas. */
+@media (max-width: 610px) {
+  .hero .apresentacao {
+    width: 100%;
+    padding-top: 26px;
+    padding-bottom: 20px;
+  }
+  .hero .apresentacao h1 {
+    margin-top: 12px;
+    margin-bottom: 18px;
+  }
+  .hero .apresentacao .frase {
+    max-width: 34ch;
+    margin: 0 auto 23px;
+    font-size: clamp(17px, 4.8vw, 19px);
+    line-height: 1.52;
+    text-align: center;
+    hyphens: none;
+  }
+  .hero .apresentacao .texto-paragrafos {
+    max-width: 43ch;
+    margin: 0 auto;
+    text-align: left;
+    hyphens: none;
+    word-break: normal;
+  }
+  .hero .apresentacao .texto-paragrafos > p {
+    margin: 0 0 17px;
+    font-size: 15px;
+    line-height: 1.77;
+    text-align: left;
+    hyphens: none;
+    overflow-wrap: break-word;
+    word-break: normal;
+  }
+  .hero .apresentacao .texto-paragrafos > p:last-child {
+    margin-bottom: 0;
+  }
+  .hero .apresentacao .link {
+    margin-top: 25px;
+  }
+}
+</style>
